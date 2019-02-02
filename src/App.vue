@@ -1,28 +1,41 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+    <h1>Hello world</h1>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'app',
-  components: {
-    HelloWorld
-  }
-}
+    export default {
+        name: 'app'
+    }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+<style lang="scss">
+    @import './assets/scss/customized-buefy';
+
+    body,
+    html {
+        padding: 0px;
+        margin: 0px;
+        background: $html-background;
+    }
+
+    .menu-list li {
+        margin: 5px
+    }
+
+    .menu-list li a:hover {
+        background: $buefy-purple;
+    }
+
+    .hero.is-primary {
+        background: linear-gradient(to top right, #524ad0 10%, #D099FA);
+    }
+
+    .is-large.fab {
+        font-size: 7em;
+    }
+
+    .is-large.fas {
+        font-size: 5em;
+        margin-left: 0.2em;
+    }
 </style>

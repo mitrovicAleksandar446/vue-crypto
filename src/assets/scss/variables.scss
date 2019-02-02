@@ -1,0 +1,12 @@
+$primary: #00d1b2;
+$buefy-purple: #7957d5;
+$html-background: #f2f2f2;
+$primary-invert: findColorInvert($primary);
+
+// Setup $colors to use as bulma classes
+$colors: ("primary": ($primary, $primary-invert));
+
+// Links
+$link: $primary;
+$link-invert: $primary-invert;
+$link-focus-border: $primary;
