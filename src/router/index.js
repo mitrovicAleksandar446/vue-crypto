@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Login from "../components/Login";
 import Home from "../components/Home";
+import EmployeeHome from "../components/authorized/employee/EmployeeHome";
 
 Vue.use(VueRouter);
 
@@ -22,6 +23,12 @@ const router = new VueRouter({
             path: '/home',
             name: "home",
             component: Home
+        },
+        {
+            path: '/employee',
+            name: "employee",
+            component: EmployeeHome,
+            meta: {authRequired: true, role: 'employee'}
         }
     ]
 });

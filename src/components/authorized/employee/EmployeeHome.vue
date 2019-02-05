@@ -17,11 +17,11 @@
 </template>
 
 <script>
-    import Sidebar from './authorized/shared/Sidebar.vue';
-    import Header from './authorized/shared/Header.vue';
+    import Sidebar from './../shared/Sidebar.vue';
+    import Header from './../shared/Header.vue';
 
     export default {
-        name: "home",
+        name: "employeeHome",
         data() {
             return {
                 sidebarOptions: {
