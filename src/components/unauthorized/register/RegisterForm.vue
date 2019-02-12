@@ -46,16 +46,15 @@
 </template>
 
 <script>
-    import { EMPLOYEE } from '@/utils/role-types'
-    import { TELLER } from '@/utils/role-types'
+    import { EMPLOYEE, TELLER, EMPLOYEE_ID, TELLER_ID } from '@/utils/role-types'
 
     export default {
         name: "RegisterForm",
         data() {
             return {
                 roles: [
-                    {"id": 1, "name": EMPLOYEE},
-                    {"id": 2, "name": TELLER}
+                    {"id": EMPLOYEE_ID, "name": EMPLOYEE},
+                    {"id": TELLER_ID, "name": TELLER}
                 ]
             }
         }
