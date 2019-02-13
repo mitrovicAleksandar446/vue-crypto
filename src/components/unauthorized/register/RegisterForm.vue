@@ -3,40 +3,75 @@
         <h1 class="title">
             Register
         </h1>
-        <b-field label="Name">
-            <b-input placeholder="Name here" maxlength="30"></b-input>
-        </b-field>
+        <form @submit.prevent="validateBeforeSubmit">
+            <b-field label="Name"
+                     :type="{'is-danger': errors.has('name')}"
+                     :message="errors.first('name')">
+                <b-input v-model="name"
+                         v-validate="'required'"
+                         name="name"
+                         placeholder="Name here" maxlength="30">
 
-        <b-field label="Email"
-                 type="is-danger"
-                 message="This email is invalid">
-            <b-input type="email"
-                     placeholder="Email here..."
-                     maxlength="30">
-            </b-input>
-        </b-field>
+                </b-input>
+            </b-field>
 
-        <b-field label="Password"
-                 type="is-warning"
-                 :message="['Password is too short', 'Password must have at least 8 characters']">
-            <b-input placeholder="Password here" type="password" maxlength="30"></b-input>
-        </b-field>
+            <b-field label="Email"
+                     :type="{'is-danger': errors.has('email')}"
+                     :message="errors.first('email')">
+                <b-input type="email"
+                         v-model="email"
+                         v-validate="'required|email'"
+                         name="email"
+                         placeholder="Email here..."
+                         maxlength="30">
+                </b-input>
+            </b-field>
 
-        <b-field label="Password repeat"
-                 type="is-warning"
-                 :message="['Repeated password must match']">
-            <b-input placeholder="Password repeat here..." type="password" maxlength="30"></b-input>
-        </b-field>
+            <b-field label="Password"
+                     :type="{'is-danger': errors.has('password')}"
+                     :message="errors.first('password')">
+                <b-input type="password"
+                         v-model="password"
+                         name="password"
+                         v-validate="'required|min:3'"
+                         placeholder="Password here" maxlength="30">
 
-        <b-field label="Role">
-            <b-select multiple placeholder="Select a role" native-size="2" v-model="roles">
-                <option v-for="role in roles" v-bind:key="role.id" :value="role.id">{{ role.name }}</option>
-            </b-select>
-        </b-field>
+                </b-input>
+            </b-field>
 
-        <b-field>
-            <a class="button is-primary">Register</a>
-        </b-field>
+            <b-field label="Confirm password"
+                     :type="{'is-danger': errors.has('passwordConfirm')}"
+                     :message="[{
+                        'The confirm password field is required' : errors.firstByRule('passwordConfirm', 'required'),
+                        'The confirm password is not valid' : errors.firstByRule('passwordConfirm', 'is')
+                     }]">
+                <b-input type="password"
+                         v-model="passwordConfirm"
+                         name="passwordConfirm"
+                         v-validate="{ required: true, is: password }"
+                         placeholder="Password repeat here..." maxlength="30"></b-input>
+            </b-field>
+
+            <b-field label="Roles"
+                     :type="{'is-danger': errors.has('selectedRoles')}"
+                     :message="errors.first('selectedRoles')">
+                <b-select v-model="selectedRoles"
+                          name="selectedRoles"
+                          v-validate="'required'"
+                          multiple placeholder="Select a role"
+                          native-size="2">
+                    <option v-for="role in roles" v-bind:key="role.id" :value="role.id">
+                        {{ role.name }}
+                    </option>
+                </b-select>
+            </b-field>
+
+            <b-field>
+                <button type="submit" class="button is-primary">
+                    Sign up
+                </button>
+            </b-field>
+        </form>
 
         <span>Already have an account ? </span>
         <span>
@@ -46,7 +81,8 @@
 </template>
 
 <script>
-    import { EMPLOYEE, TELLER, EMPLOYEE_ID, TELLER_ID } from '@/utils/role-types'
+    import {EMPLOYEE, TELLER, EMPLOYEE_ID, TELLER_ID} from '@/utils/role-types'
+    import { mapActions } from 'vuex'
 
     export default {
         name: "RegisterForm",
@@ -55,7 +91,39 @@
                 roles: [
                     {"id": EMPLOYEE_ID, "name": EMPLOYEE},
                     {"id": TELLER_ID, "name": TELLER}
-                ]
+                ],
+                name: null,
+                email: null,
+                password: null,
+                passwordConfirm: null,
+                selectedRoles: []
+            }
+        },
+        methods: {
+            ...mapActions(['signup']),
+            validateBeforeSubmit() {
+                this.$validator.validateAll().then((result) => {
+                    if (result) {
+                        this.$toast.open({
+                            message: 'Yor have successfully registered!',
+                            type: 'is-success',
+                            position: 'is-bottom'
+                        });
+                        this.signup([
+                            this.name,
+                            this.email,
+                            this.password,
+                            this.passwordConfirm,
+                            this.selectedRoles
+                        ]);
+                        return;
+                    }
+                    this.$toast.open({
+                        message: 'Form is not valid! Please check the fields.',
+                        type: 'is-danger',
+                        position: 'is-bottom'
+                    });
+                });
             }
         }
     }
