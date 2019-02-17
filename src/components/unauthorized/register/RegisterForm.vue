@@ -7,8 +7,8 @@
             <b-field label="Name"
                      :type="{'is-danger': errors.has('name')}"
                      :message="errors.first('name')">
-                <b-input v-model="name"
-                         v-validate="'required'"
+                <b-input v-model="user.name"
+                         v-validate="'required|min:3'"
                          name="name"
                          placeholder="Name here" maxlength="30">
 
@@ -19,7 +19,7 @@
                      :type="{'is-danger': errors.has('email')}"
                      :message="errors.first('email')">
                 <b-input type="email"
-                         v-model="email"
+                         v-model="user.email"
                          v-validate="'required|email'"
                          name="email"
                          placeholder="Email here..."
@@ -31,7 +31,7 @@
                      :type="{'is-danger': errors.has('password')}"
                      :message="errors.first('password')">
                 <b-input type="password"
-                         v-model="password"
+                         v-model="user.password"
                          name="password"
                          v-validate="'required|min:3'"
                          placeholder="Password here" maxlength="30">
@@ -46,16 +46,18 @@
                         'The confirm password is not valid' : errors.firstByRule('passwordConfirm', 'is')
                      }]">
                 <b-input type="password"
-                         v-model="passwordConfirm"
+                         v-model="user.passwordConfirm"
                          name="passwordConfirm"
-                         v-validate="{ required: true, is: password }"
+                         v-validate="{ required: true, is: user.password }"
                          placeholder="Password repeat here..." maxlength="30"></b-input>
             </b-field>
 
             <b-field label="Roles"
                      :type="{'is-danger': errors.has('selectedRoles')}"
-                     :message="errors.first('selectedRoles')">
-                <b-select v-model="selectedRoles"
+                     :message="[{
+                        'Role is required': errors.firstByRule('selectedRoles', 'required')
+                     }]">
+                <b-select v-model="user.selectedRoles"
                           name="selectedRoles"
                           v-validate="'required'"
                           multiple placeholder="Select a role"
@@ -92,11 +94,13 @@
                     {"id": EMPLOYEE_ID, "name": EMPLOYEE},
                     {"id": TELLER_ID, "name": TELLER}
                 ],
-                name: null,
-                email: null,
-                password: null,
-                passwordConfirm: null,
-                selectedRoles: []
+                user: {
+                    name: null,
+                    email: null,
+                    password: null,
+                    passwordConfirm: null,
+                    selectedRoles: []
+                }
             }
         },
         methods: {
@@ -109,13 +113,7 @@
                             type: 'is-success',
                             position: 'is-bottom'
                         });
-                        this.signup([
-                            this.name,
-                            this.email,
-                            this.password,
-                            this.passwordConfirm,
-                            this.selectedRoles
-                        ]);
+                        this.signup(this.user);
                         return;
                     }
                     this.$toast.open({
