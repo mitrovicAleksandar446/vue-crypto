@@ -1,8 +1,8 @@
 import axios from 'axios'
 import interceptors from "./interceptors/"
-import { API_ROOT } from "../config";
+import {API_ROOT} from "../config";
 
-const http =  axios.create({
+const http = axios.create({
     baseURL: API_ROOT
 });
 

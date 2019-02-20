@@ -1,11 +1,14 @@
-import { http } from '@/services/http'
+'use strict';
+
+import userApi from './../../services/api/user'
 
 const state = {
     authUser: null
 };
 
 const actions = {
-    signup({ commit }, user) {
+    async signUp({commit}, user) {
+        console.log(await userApi.signUp(user));
         console.log(user);
     }
 };

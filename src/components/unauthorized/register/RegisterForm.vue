@@ -104,7 +104,7 @@
             }
         },
         methods: {
-            ...mapActions(['signup']),
+            ...mapActions(['signUp']),
             validateBeforeSubmit() {
                 this.$validator.validateAll().then((result) => {
                     if (result) {
@@ -113,7 +113,7 @@
                             type: 'is-success',
                             position: 'is-bottom'
                         });
-                        this.signup(this.user);
+                        this.signUp(this.user);
                         return;
                     }
                     this.$toast.open({
