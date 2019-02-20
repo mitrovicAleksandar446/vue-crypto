@@ -61,7 +61,7 @@ class Storage {
 
     destroyAll(ids) {
         if (Array.isArray(ids) && ids.length > 0) {
-            for (const key in ids) {
+            for (const key of ids) {
                 this.destroy(key);
             }
         }
