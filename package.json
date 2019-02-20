@@ -14,7 +14,7 @@
     "vue": "^2.5.22",
     "vue-router": "^3.0.2",
     "vuex": "^3.1.0",
-    "web3": "^1.0.0-beta.46"
+    "web3": "1.0.0-beta.34"
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.7.1",
