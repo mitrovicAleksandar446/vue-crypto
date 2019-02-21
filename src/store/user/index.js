@@ -7,13 +7,17 @@ const state = {
 };
 
 const actions = {
-    async signUp({dispatch}, user) {
-       const userExists = await userApi.emailExist(user.email);
-       if (!userExists) {
-           alert("OK");
-           return;
+    async emailIsFree({dispatch}, email) {
+       const userExists = await userApi.emailExist(email);
+       if (userExists) {
+           dispatch("dialog/showDialog", {message: "Email already taken", type: "is-danger"}, {root: true});
+           return false;
        }
-       dispatch("dialog/showDialog", {message: "Email already taken", type: "is-danger"}, {root: true});
+       return true;
+    },
+
+    async signUp(context, user) {
+        console.log("napravio se wallet i pravi se user");
     }
 };
 

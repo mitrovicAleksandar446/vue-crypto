@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import userModule from './user'
 import dialogModule from './dialog'
+import walletModule from './wallet'
 
 Vue.use(Vuex);
 
@@ -12,7 +13,8 @@ const store = new Vuex.Store({
     },
     modules: {
         user: userModule,
-        dialog: dialogModule
+        dialog: dialogModule,
+        wallet: walletModule
     }
 });
 

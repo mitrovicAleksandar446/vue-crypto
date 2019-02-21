@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <b-loading :is-full-page="tru" :active.sync="tru"></b-loading>
         <h1 class="title">
             Register
         </h1>
@@ -94,6 +95,7 @@
                     {"id": EMPLOYEE_ID, "name": EMPLOYEE},
                     {"id": TELLER_ID, "name": TELLER}
                 ],
+                tru: true,
                 user: {
                     name: null,
                     email: null,
@@ -104,23 +106,23 @@
             }
         },
         methods: {
-            ...mapActions('user', ['signUp']),
+            ...mapActions('user', ['emailIsFree', 'signUp']),
+            ...mapActions('wallet', ['createWallet']),
             validateBeforeSubmit() {
-                this.$validator.validateAll().then((result) => {
-                    if (result) {
-                        // this.$toast.open({
-                        //     message: 'Yor have successfully registered!',
-                        //     type: 'is-success',
-                        //     position: 'is-bottom'
-                        // });
-                        this.signUp(this.user);
-                        return;
+                this.$validator.validateAll().then(this.registerUser);
+            },
+            async registerUser(valid) {
+                if (valid) {
+                    if(await this.emailIsFree(this.user.email)) {
+                        await this.createWallet({email: this.user.email, password: this.user.password});
+                        //await this.signUp(this.user);
                     }
-                    this.$toast.open({
-                        message: 'Form is not valid! Please check the fields.',
-                        type: 'is-danger',
-                        position: 'is-bottom'
-                    });
+                    alert("Success");
+                }
+                this.$toast.open({
+                    message: 'Form is not valid! Please check the fields.',
+                    type: 'is-danger',
+                    position: 'is-bottom'
                 });
             }
         }
