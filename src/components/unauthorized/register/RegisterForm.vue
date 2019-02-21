@@ -104,15 +104,15 @@
             }
         },
         methods: {
-            ...mapActions(['signUp']),
+            ...mapActions('user', ['signUp']),
             validateBeforeSubmit() {
                 this.$validator.validateAll().then((result) => {
                     if (result) {
-                        this.$toast.open({
-                            message: 'Yor have successfully registered!',
-                            type: 'is-success',
-                            position: 'is-bottom'
-                        });
+                        // this.$toast.open({
+                        //     message: 'Yor have successfully registered!',
+                        //     type: 'is-success',
+                        //     position: 'is-bottom'
+                        // });
                         this.signUp(this.user);
                         return;
                     }

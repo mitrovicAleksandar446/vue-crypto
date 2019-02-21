@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import userModule from './user'
+import dialogModule from './dialog'
 
 Vue.use(Vuex);
 
@@ -10,7 +11,8 @@ const store = new Vuex.Store({
         currentPage: null
     },
     modules: {
-        user: userModule
+        user: userModule,
+        dialog: dialogModule
     }
 });
 
