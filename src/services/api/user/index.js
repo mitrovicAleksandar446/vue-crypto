@@ -6,7 +6,7 @@ export default {
 }
 
 function signUp(user) {
-    //
+    return http.post(`/users`, user);
 }
 
 function emailExist(email) {

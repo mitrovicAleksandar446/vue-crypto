@@ -1,6 +1,5 @@
 <template>
     <div class="container">
-        <b-loading :is-full-page="tru" :active.sync="tru"></b-loading>
         <h1 class="title">
             Register
         </h1>
@@ -85,7 +84,8 @@
 
 <script>
     import {EMPLOYEE, TELLER, EMPLOYEE_ID, TELLER_ID} from '@/utils/role-types'
-    import { mapActions } from 'vuex'
+    import {mapActions} from 'vuex'
+    import {mapState} from 'vuex'
 
     export default {
         name: "RegisterForm",
@@ -95,7 +95,6 @@
                     {"id": EMPLOYEE_ID, "name": EMPLOYEE},
                     {"id": TELLER_ID, "name": TELLER}
                 ],
-                tru: true,
                 user: {
                     name: null,
                     email: null,
@@ -105,19 +104,42 @@
                 }
             }
         },
+        computed: {
+            ...mapState({
+                mnemonic: state => state.wallet.mnemonic
+            })
+        },
         methods: {
             ...mapActions('user', ['emailIsFree', 'signUp']),
             ...mapActions('wallet', ['createWallet']),
+            ...mapActions('loader', ['activateLoader']),
+            ...mapActions('dialog', ['showDialog']),
             validateBeforeSubmit() {
                 this.$validator.validateAll().then(this.registerUser);
             },
-            async registerUser(valid) {
-                if (valid) {
-                    if(await this.emailIsFree(this.user.email)) {
+            async registerUser(validated) {
+                if (validated) {
+                    this.activateLoader(true);
+                    const emailIsFree = await this.emailIsFree(this.user.email);
+                    if (emailIsFree) {
                         await this.createWallet({email: this.user.email, password: this.user.password});
-                        //await this.signUp(this.user);
+                        await this.signUp(this.user);
+                        this.activateLoader(false);
+                        this.$toast.open({
+                            message: 'You have successfully registered',
+                            type: 'is-success',
+                            position: 'is-bottom'
+                        });
+                        setTimeout(() => {
+                            this.showDialog({message: this.mnemonic, type: "is-success", title: "Please write down your seeder"});
+                            this.$router.replace({name: 'login'});
+                        }, 1000);
+                        return;
+                    } else {
+                        this.activateLoader(false);
+                        this.showDialog({message: "Email already taken", type: "is-danger"});
+                        return;
                     }
-                    alert("Success");
                 }
                 this.$toast.open({
                     message: 'Form is not valid! Please check the fields.',

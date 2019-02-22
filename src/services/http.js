@@ -6,6 +6,8 @@ const http = axios.create({
     baseURL: API_ROOT
 });
 
+const responseTransformer = response => response.data;
+
 interceptors.requests.forEach((interceptor) => {
     http.interceptors.request.use(interceptor);
 });
@@ -15,5 +17,6 @@ interceptors.responses.forEach((interceptor) => {
 });
 
 export {
-    http
+    http,
+    responseTransformer
 };
