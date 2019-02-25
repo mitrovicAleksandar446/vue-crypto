@@ -9,8 +9,8 @@ const state = {
 
 const actions = {
     async emailIsFree(context, email) {
-       const userExists = await userApi.emailExist(email);
-       return !userExists;
+        const userExists = await userApi.emailExist(email);
+        return !userExists;
     },
 
     async signUp(context, user) {

@@ -7,15 +7,18 @@
 
     export default {
         name: "Dialog",
+
         props: {
             data: {
-                required:true,
+                required: true,
                 type: Object
             }
         },
+
         methods: {
             ...mapActions('dialog', ['hideDialog'])
         },
+
         mounted() {
             this.$dialog.alert(this.data);
             this.hideDialog();
@@ -24,5 +27,4 @@
 </script>
 
 <style scoped>
-
 </style>

@@ -9,11 +9,11 @@ const http = axios.create({
 const responseTransformer = response => response.data;
 
 interceptors.requests.forEach((interceptor) => {
-    http.interceptors.request.use(interceptor);
+    http.interceptors.request.use(interceptor.success, interceptor.error);
 });
 
 interceptors.responses.forEach((interceptor) => {
-    http.interceptors.response.use(interceptor);
+    http.interceptors.response.use(interceptor.success, interceptor.error);
 });
 
 export {
