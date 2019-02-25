@@ -3,20 +3,38 @@
         <h1 class="title">
             Login
         </h1>
-        <b-field label="Email"
-                 type="is-danger"
-                 message="This email is invalid">
-            <b-input type="email" maxlength="30" placeholder="Email here..."></b-input>
-        </b-field>
-        <b-field label="Password"
-                 type="is-warning"
-                 :message="['Password is too short', 'Password must have at least 8 characters']">
-            <b-input type="password" maxlength="30" placeholder="Password here..."></b-input>
-        </b-field>
+        <form @submit.prevent="validateBeforeLogin">
+            <b-field label="Email"
+                     :type="{'is-danger': errors.has('email')}"
+                     :message="errors.first('email')">
+                <b-input type="email"
+                         v-model="user.email"
+                         v-validate="'required|email'"
+                         name="email"
+                         maxlength="30"
+                         placeholder="Email here...">
 
-        <b-field>
-            <a class="button is-primary">Login</a>
-        </b-field>
+                </b-input>
+            </b-field>
+            <b-field label="Password"
+                     :type="{'is-danger': errors.has('password')}"
+                     :message="errors.first('password')">
+                <b-input type="password"
+                         v-model="user.password"
+                         v-validate="'required|min:3'"
+                         name="password"
+                         maxlength="30"
+                         placeholder="Password here...">
+
+                </b-input>
+            </b-field>
+
+            <b-field>
+                <button type="submit" class="button is-primary">
+                    Login
+                </button>
+            </b-field>
+        </form>
 
         <span>Don't have an account ? </span>
         <span>
@@ -27,7 +45,38 @@
 
 <script>
     export default {
-        name: "LoginForm"
+        name: "LoginForm",
+
+        data() {
+            return {
+                user: {
+                    email: null,
+                    password: null
+                }
+            }
+        },
+
+        methods: {
+            validateBeforeLogin() {
+                this.$validator.validateAll().then(this.login);
+            },
+
+            login(valid) {
+                if (valid) {
+                    this.$toast.open({
+                        message: 'You have successfully registered',
+                        type: 'is-success',
+                        position: 'is-bottom'
+                    });
+                    return;
+                }
+                this.$toast.open({
+                    message: 'Form is not valid! Please check the fields.',
+                    type: 'is-danger',
+                    position: 'is-bottom'
+                });
+            }
+        }
     }
 </script>
 

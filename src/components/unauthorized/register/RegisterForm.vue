@@ -89,6 +89,7 @@
 
     export default {
         name: "RegisterForm",
+
         data() {
             return {
                 roles: [
@@ -104,21 +105,25 @@
                 }
             }
         },
+
         computed: {
             ...mapState({
                 mnemonic: state => state.wallet.mnemonic
             })
         },
+
         methods: {
             ...mapActions('user', ['emailIsFree', 'signUp']),
             ...mapActions('wallet', ['createWallet']),
             ...mapActions('loader', ['activateLoader']),
             ...mapActions('dialog', ['showDialog']),
+
             validateBeforeSubmit() {
                 this.$validator.validateAll().then(this.registerUser);
             },
-            async registerUser(validated) {
-                if (validated) {
+
+            async registerUser(valid) {
+                if (valid) {
                     this.activateLoader(true);
                     const emailIsFree = await this.emailIsFree(this.user.email);
                     if (emailIsFree) {
@@ -131,7 +136,11 @@
                             position: 'is-bottom'
                         });
                         setTimeout(() => {
-                            this.showDialog({message: this.mnemonic, type: "is-success", title: "Please write down your seeder"});
+                            this.showDialog({
+                                message: this.mnemonic,
+                                type: "is-success",
+                                title: "Please write down your seeder"
+                            });
                             this.$router.replace({name: 'login'});
                         }, 1000);
                         return;
