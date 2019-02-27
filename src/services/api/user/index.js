@@ -1,12 +1,21 @@
-import {http} from './../../http'
+import {
+    http,
+    responseTransformer
+} from './../../http'
 
 export default {
     signUp,
-    emailExist
+    emailExist,
+    signIn
 }
 
 function signUp(user) {
     return http.post(`/users`, user);
+}
+
+function signIn(email, password) {
+    return http.post(`/auth/login`, {email, password})
+        .then(responseTransformer)
 }
 
 function emailExist(email) {

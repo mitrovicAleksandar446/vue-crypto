@@ -6,7 +6,7 @@ const http = axios.create({
     baseURL: API_ROOT
 });
 
-const responseTransformer = response => response.data;
+const responseTransformer = response => response.data.data;
 
 interceptors.requests.forEach((interceptor) => {
     http.interceptors.request.use(interceptor.success, interceptor.error);

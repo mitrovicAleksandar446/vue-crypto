@@ -16,11 +16,11 @@ class Storage {
     }
 
     getFromLocal(id) {
-        return this.hasInLocal(id) ? this.localStorage.getItem(id) : null;
+        return this.localStorage.getItem(id);
     }
 
     getFromSession(id) {
-        return this.hasInSession(id) ? this.sessionStorage.getItem(id) : null;
+        return this.sessionStorage.getItem(id);
     }
 
     has(id) {
@@ -28,11 +28,11 @@ class Storage {
     }
 
     hasInLocal(id) {
-        return this.localStorage.has(id);
+        return this.getFromLocal(id) !== null;
     }
 
     hasInSession(id) {
-        return this.sessionStorage.has(id);
+        return this.getFromSession(id) !== null;
     }
 
     putInLocal(id, value) {

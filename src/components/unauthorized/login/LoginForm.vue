@@ -44,6 +44,8 @@
 </template>
 
 <script>
+    import {mapActions} from 'vuex';
+
     export default {
         name: "LoginForm",
 
@@ -57,14 +59,21 @@
         },
 
         methods: {
+
+            ...mapActions('user', ['signIn']),
+
             validateBeforeLogin() {
                 this.$validator.validateAll().then(this.login);
             },
 
-            login(valid) {
+            async login(valid) {
                 if (valid) {
+                    await this.signIn({
+                        email: this.user.email,
+                        password: this.user.password
+                    });
                     this.$toast.open({
-                        message: 'You have successfully registered',
+                        message: 'You have successfully signed in',
                         type: 'is-success',
                         position: 'is-bottom'
                     });
