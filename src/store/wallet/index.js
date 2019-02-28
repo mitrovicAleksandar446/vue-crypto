@@ -23,6 +23,11 @@ const actions = {
         commit('setMnemonic', mnemonic);
         const wallet = ethWallet.create(mnemonic, userData.password, userData.email);
         commit('setWallet', wallet);
+    },
+
+    loadWallet({commit}, userData) {
+        const wallet = ethWallet.load(userData.email, userData.password);
+        commit('setWallet', wallet);
     }
 };
 

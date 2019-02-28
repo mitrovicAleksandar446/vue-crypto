@@ -45,6 +45,8 @@
 
 <script>
     import {mapActions} from 'vuex';
+    import {mapState} from 'vuex';
+    import {TELLER_ID} from "../../../utils/role-types";
 
     export default {
         name: "LoginForm",
@@ -58,9 +60,17 @@
             }
         },
 
+        computed: {
+            ...mapState({
+                authUser: state => state.user.authUser
+            })
+        },
+
         methods: {
 
-            ...mapActions('user', ['signIn']),
+            ...mapActions('user', ['signIn', 'getUser']),
+            ...mapActions('wallet', ['loadWallet']),
+            ...mapActions('dialog', ['showDialog']),
 
             validateBeforeLogin() {
                 this.$validator.validateAll().then(this.login);
@@ -68,15 +78,28 @@
 
             async login(valid) {
                 if (valid) {
-                    await this.signIn({
+                    const credentials = {
                         email: this.user.email,
                         password: this.user.password
-                    });
+                    };
+
+                    try {
+                        await this.signIn(credentials);
+                    } catch (err) {
+                        this.showDialog({message: "User not found", type: "is-danger"});
+                        return;
+                    }
+
+                    this.loadWallet(credentials);
+                    await this.getUser();
+
                     this.$toast.open({
                         message: 'You have successfully signed in',
                         type: 'is-success',
                         position: 'is-bottom'
                     });
+
+                    setTimeout(() => this.redirectAfterLogin(), 1000);
                     return;
                 }
                 this.$toast.open({
@@ -84,6 +107,15 @@
                     type: 'is-danger',
                     position: 'is-bottom'
                 });
+            },
+
+            redirectAfterLogin() {
+                const role = this.authUser.roles.find((role) => role.id === TELLER_ID);
+                let redirectTo = "employeeHome";
+                if (role !== undefined) {
+                    redirectTo = "tellerHome";
+                }
+                this.$router.replace({name: redirectTo});
             }
         }
     }

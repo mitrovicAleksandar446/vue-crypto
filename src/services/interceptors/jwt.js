@@ -1,9 +1,8 @@
-import {JWT_TOKEN_NAME} from './../../config'
-import Storage from './../Storage'
+import {getToken} from './../../utils/helpers'
 
 export default {
     success: config => {
-        const token = Storage.hasInLocal(JWT_TOKEN_NAME) ? Storage.getFromLocal(JWT_TOKEN_NAME) : null;
+        const token = getToken();
         if (token) {
             config.headers.common["Authorization"] = `Bearer ${token}`;
         }

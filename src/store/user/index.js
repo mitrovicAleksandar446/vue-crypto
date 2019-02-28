@@ -4,9 +4,16 @@ import userApi from './../../services/api/user'
 import ethWallet from './../../services/eth/wallet'
 import Storage from './../../services/Storage'
 import {JWT_TOKEN_NAME} from './../../config'
+import {http} from "../../services/http";
 
 const state = {
     authUser: null
+};
+
+const mutations = {
+    setAuthUser(state, user) {
+        state.authUser = user;
+    }
 };
 
 const actions = {
@@ -36,11 +43,19 @@ const actions = {
             token: accessInfo.access_token,
             expireDate: tokenExpirationDate
         }));
+    },
+
+    getUser({commit}) {
+        return userApi.getUser()
+            .then(user => {
+                commit('setAuthUser', user);
+            });
     }
 };
 
 export default {
     namespaced: true,
     state,
+    mutations,
     actions
 }

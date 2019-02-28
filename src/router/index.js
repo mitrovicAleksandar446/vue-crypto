@@ -5,7 +5,9 @@ import Home from "../components/Home";
 import Login from "../components/unauthorized/login/LoginForm";
 import Register from "../components/unauthorized/register/RegisterForm";
 
-import { EMPLOYEE } from "@/utils/role-types";
+import {EMPLOYEE_ID} from "../utils/role-types";
+import {TELLER_ID} from "../utils/role-types";
+import {getAccessInfo} from "../utils/helpers";
 
 Vue.use(VueRouter);
 
@@ -19,19 +21,25 @@ const router = new VueRouter({
             path: '/login',
             name: "login",
             component: Login,
-            meta: {authRequired: false, role: null}
+            meta: getMetaFor(null)
         },
         {
             path: '/register',
             name: "register",
             component: Register,
-            meta: {authRequired: false, role: null}
+            meta: getMetaFor(null)
         },
         {
             path: '/employee',
-            name: "employee",
+            name: "employeeHome",
             component: EmployeeHome,
-            meta: {authRequired: true, role: EMPLOYEE}
+            meta: getMetaFor(EMPLOYEE_ID)
+        },
+        {
+            path: '/teller',
+            name: "tellerHome",
+            component: EmployeeHome,
+            meta: getMetaFor(TELLER_ID)
         },
         // {
         //     path: '*',
@@ -41,7 +49,28 @@ const router = new VueRouter({
     ]
 });
 
+function getMetaFor(role) {
+    if (!role) {
+        return {authRequired: false, role: null};
+    }
+    return {authRequired: true, role: role};
+}
+
+function tokenDidntExpire(expireDate) {
+    return expireDate > new Date;
+}
+
+function routeRequiresToBeAuthorized(route) {
+    return route.meta.authRequired;
+}
+
 router.beforeEach((to, from, next) => {
+    const access = getAccessInfo();
+    if (routeRequiresToBeAuthorized(to) && tokenDidntExpire(access.expireDate)) {
+
+    } else {
+
+    }
     console.log(to);
     next();
 });
