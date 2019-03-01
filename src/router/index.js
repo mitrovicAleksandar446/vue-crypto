@@ -21,25 +21,25 @@ const router = new VueRouter({
             path: '/login',
             name: "login",
             component: Login,
-            meta: getMetaFor(null)
+            meta: getMetaFor(false)
         },
         {
             path: '/register',
             name: "register",
             component: Register,
-            meta: getMetaFor(null)
+            meta: getMetaFor(false)
         },
         {
             path: '/employee',
             name: "employeeHome",
             component: EmployeeHome,
-            meta: getMetaFor(EMPLOYEE_ID)
+            meta: getMetaFor(true, EMPLOYEE_ID)
         },
         {
             path: '/teller',
             name: "tellerHome",
             component: EmployeeHome,
-            meta: getMetaFor(TELLER_ID)
+            meta: getMetaFor(true, TELLER_ID)
         },
         // {
         //     path: '*',
@@ -49,11 +49,11 @@ const router = new VueRouter({
     ]
 });
 
-function getMetaFor(role) {
+function getMetaFor(isAuthorized, role = null) {
     if (!role) {
-        return {authRequired: false, role: null};
+        return {authRequired: isAuthorized, role: null};
     }
-    return {authRequired: true, role: role};
+    return {authRequired: isAuthorized, role: role};
 }
 
 function tokenDidntExpire(expireDate) {
@@ -64,15 +64,26 @@ function routeRequiresToBeAuthorized(route) {
     return route.meta.authRequired;
 }
 
+function routeMathesUserRole(route, role) {
+    if (!role) return false;
+    return !route.meta.role || route.meta.role === role;
+}
+
 router.beforeEach((to, from, next) => {
     const access = getAccessInfo();
-    if (routeRequiresToBeAuthorized(to) && tokenDidntExpire(access.expireDate)) {
-
+    if (routeRequiresToBeAuthorized(to)) {
+        if (access && tokenDidntExpire(access.expireDate)) {
+            if (routeMathesUserRole(to, access.role)) {
+                next();
+            } else {
+                next({name: from.name});
+            }
+        } else {
+            next({name: 'login'});
+        }
     } else {
-
+        next();
     }
-    console.log(to);
-    next();
 });
 
 export default router;

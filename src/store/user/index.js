@@ -4,15 +4,21 @@ import userApi from './../../services/api/user'
 import ethWallet from './../../services/eth/wallet'
 import Storage from './../../services/Storage'
 import {JWT_TOKEN_NAME} from './../../config'
-import {http} from "../../services/http";
+import {TELLER_ID} from './../../utils/role-types'
+import {EMPLOYEE_ID} from './../../utils/role-types'
 
 const state = {
-    authUser: null
+    authUser: null,
+    isTeller: null,
 };
 
 const mutations = {
     setAuthUser(state, user) {
         state.authUser = user;
+    },
+
+    setIsTeller(state, isTeller) {
+        state.isTeller = isTeller;
     }
 };
 
@@ -41,8 +47,25 @@ const actions = {
 
         Storage.putInLocal(JWT_TOKEN_NAME, JSON.stringify({
             token: accessInfo.access_token,
-            expireDate: tokenExpirationDate
+            expireDate: tokenExpirationDate.getTime()
         }));
+    },
+
+    saveUserInfo({dispatch, state, commit}) {
+        return dispatch('getUser')
+            .then(() => {
+                const access = JSON.parse(Storage.getFromLocal(JWT_TOKEN_NAME));
+                if (access) {
+                    const isTeller = !!state.authUser.roles.find(role => role.id === TELLER_ID);
+                    if (isTeller) {
+                        access.role = TELLER_ID;
+                        commit('setIsTeller', true);
+                    } else {
+                        access.role = EMPLOYEE_ID;
+                    }
+                    Storage.putInLocal(JWT_TOKEN_NAME, JSON.stringify(access));
+                }
+            });
     },
 
     getUser({commit}) {
