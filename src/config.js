@@ -9,3 +9,6 @@ export const ETH_PROVIDER_HOST = process.env.VUE_APP_ETH_PROVIDER_HOST || "http:
 
 /** @namespace process.env.VUE_APP_ETH_PROVIDER_PORT */
 export const ETH_PROVIDER_PORT = process.env.VUE_APP_ETH_PROVIDER_PORT || 7545;
+
+/** @namespace process.env.VUE_APP_CONTRACT_GAS_PRICE */
+export const CONTRACT_GAS_PRICE = process.env.VUE_APP_CONTRACT_GAS_PRICE || '20000000000'; // 20 gwei

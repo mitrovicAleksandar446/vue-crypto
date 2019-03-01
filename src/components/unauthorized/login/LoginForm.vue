@@ -71,6 +71,7 @@
             ...mapActions('user', ['signIn', 'saveUserInfo']),
             ...mapActions('wallet', ['loadWallet']),
             ...mapActions('dialog', ['showDialog']),
+            ...mapActions('contract', ['createContract']),
 
             validateBeforeLogin() {
                 this.$validator.validateAll().then(this.login);
@@ -92,6 +93,7 @@
 
                     this.loadWallet(credentials);
                     await this.saveUserInfo();
+                    await this.createContract();
 
                     this.$toast.open({
                         message: 'You have successfully signed in',

@@ -64,7 +64,7 @@ function routeRequiresToBeAuthorized(route) {
     return route.meta.authRequired;
 }
 
-function routeMathesUserRole(route, role) {
+function routeMatchesUserRole(route, role) {
     if (!role) return false;
     return !route.meta.role || route.meta.role === role;
 }
@@ -73,7 +73,7 @@ router.beforeEach((to, from, next) => {
     const access = getAccessInfo();
     if (routeRequiresToBeAuthorized(to)) {
         if (access && tokenDidntExpire(access.expireDate)) {
-            if (routeMathesUserRole(to, access.role)) {
+            if (routeMatchesUserRole(to, access.role)) {
                 next();
             } else {
                 next({name: from.name});
