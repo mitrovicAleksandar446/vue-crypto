@@ -1,10 +1,12 @@
 export default [
     {
         action: "user/getUser",
-        authorized: true
+        authorized: true,
+        hasDependence: true
     },
     {
         action: "contract/createContract",
-        authorized: true
+        authorized: true,
+        hasDependence: false
     }
 ]

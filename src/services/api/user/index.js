@@ -8,7 +8,9 @@ export default {
     emailExist,
     signIn,
     signOut,
-    getUser
+    getUser,
+    getInactiveUsers,
+    activateUser
 }
 
 function signUp(user) {
@@ -33,4 +35,13 @@ function emailExist(email) {
 function getUser() {
     return http.get(`/auth/me`)
         .then(responseTransformer);
+}
+
+function getInactiveUsers() {
+    return http.get(`/users`, {params: {active: false}})
+        .then(responseTransformer);
+}
+
+function activateUser(id) {
+    return http.patch(`/users/${id}`, {active: true});
 }

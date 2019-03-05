@@ -8,7 +8,7 @@
                         <Sidebar v-bind:options="sidebarOptions"></Sidebar>
                     </div>
                     <div class="column is-10">
-                        <h1>Employee</h1>
+                        <router-view></router-view>
                     </div>
                 </div>
             </div>
@@ -21,7 +21,7 @@
     import Header from './../shared/Header.vue';
 
     export default {
-        name: "employeeHome",
+        name: "tellerHome",
 
         data() {
             return {
@@ -34,8 +34,8 @@
                         href: "wwww.yahoo.com",
                         active: false
                     },
-                    "Link3" : {
-                        href: "wwww.bing.com",
+                    "Inactive users" : {
+                        href: {name: "inactiveUsers"},
                         active: false
                     }
                 }

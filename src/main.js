@@ -13,10 +13,13 @@ Vue.config.productionTip = false;
 Vue.use(Buefy);
 Vue.use(VeeValidate);
 
-StoreBootstrap.bootActions();
+StoreBootstrap.bootActions()
+    .then(() => {
+        new Vue({
+            router,
+            store,
+            render: h => h(App)
+        }).$mount('#app');
+    });
 
-new Vue({
-    router,
-    store,
-    render: h => h(App)
-}).$mount('#app');
+

@@ -5,9 +5,9 @@
         </p>
         <ul class="menu-list">
             <li v-for="(option, name) in options" v-bind:key="name">
-                <a v-bind:href="option.href" v-bind:class='{"is-active": option.active}'>
+                <router-link :to="option.href" v-bind:class='{"is-active": option.active}'>
                     {{ name }}
-                </a>
+                </router-link>
             </li>
         </ul>
     </aside>

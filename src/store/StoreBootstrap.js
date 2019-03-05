@@ -1,5 +1,5 @@
 import store from '.'
-import bootActions from './bootableActions'
+import bootableActions from './bootableActions'
 import {tokenExists} from "../utils/helpers";
 
 class StoreBootstrap {
@@ -9,12 +9,22 @@ class StoreBootstrap {
         this.bootableActions = actions;
     }
 
-    bootActions() {
-        this.bootableActions.forEach(async (boot) => {
-            if (!boot.authorized || (boot.authorized && tokenExists())) {
-                await this.store.dispatch(boot.action);
+    async bootActions() {
+
+        for (const boot of this.bootableActions) {
+            if (this.actionCanBeExecuted(boot)) {
+
+                if (boot.hasDependence) {
+                    await this.store.dispatch(boot.action);
+                } else {
+                    this.store.dispatch(boot.action);
+                }
             }
-        });
+        }
+    }
+
+    actionCanBeExecuted(bootAction) {
+        return !bootAction.authorized || (bootAction.authorized && tokenExists());
     }
 
     boot(action) {
@@ -22,4 +32,4 @@ class StoreBootstrap {
     }
 }
 
-export default new StoreBootstrap(store, bootActions);
+export default new StoreBootstrap(store, bootableActions);
