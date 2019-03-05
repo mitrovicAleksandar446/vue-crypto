@@ -6,7 +6,7 @@ export default {
 };
 
 function create(abi, address, from) {
-    return new ethClient.eth.Contract(abi, address, {
+    return new ethClient.eth.Contract(JSON.parse(abi), address, {
         from: from,
         gasPrice: CONTRACT_GAS_PRICE
     });

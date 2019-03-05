@@ -46,6 +46,8 @@
 <script>
     import {mapActions} from 'vuex';
     import {mapState} from 'vuex';
+    import {mapGetters} from 'vuex';
+    import {TELLER_ID} from "../../../utils/role-types";
 
     export default {
         name: "LoginForm",
@@ -60,15 +62,17 @@
         },
 
         computed: {
+
             ...mapState({
-                authUser: state => state.user.authUser,
-                userIsTeller: state => state.user.isTeller
-            })
+                authUser: state => state.user.authUser
+            }),
+
+            ...mapGetters('user', ['userRoles'])
         },
 
         methods: {
 
-            ...mapActions('user', ['signIn', 'saveUserInfo']),
+            ...mapActions('user', ['signIn', 'getUser']),
             ...mapActions('wallet', ['loadWallet']),
             ...mapActions('dialog', ['showDialog']),
             ...mapActions('contract', ['createContract']),
@@ -92,7 +96,7 @@
                     }
 
                     this.loadWallet(credentials);
-                    await this.saveUserInfo();
+                    await this.getUser();
                     await this.createContract();
 
                     this.$toast.open({
@@ -113,7 +117,7 @@
 
             redirectAfterLogin() {
                 let redirectTo = "employeeHome";
-                if (this.userIsTeller) {
+                if (this.userRoles.includes(TELLER_ID)) {
                     redirectTo = "tellerHome";
                 }
                 this.$router.replace({name: redirectTo});

@@ -6,6 +6,7 @@
     </div>
 </template>
 
+
 <script>
     import Dialog from './components/Dialog.vue';
     import Loader from './components/Loader.vue';
@@ -13,10 +14,12 @@
 
     export default {
         name: 'app',
+
         components: {
             Dialog,
             Loader
         },
+
         computed: {
             ...mapState({
                 dialogData: state => state.dialog.data

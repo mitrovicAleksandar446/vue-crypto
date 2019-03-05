@@ -9,6 +9,8 @@ import {EMPLOYEE_ID} from "../utils/role-types";
 import {TELLER_ID} from "../utils/role-types";
 import {getAccessInfo} from "../utils/helpers";
 
+import store from './../store/'
+
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -21,25 +23,25 @@ const router = new VueRouter({
             path: '/login',
             name: "login",
             component: Login,
-            meta: getMetaFor(false)
+            meta: getMeta(false)
         },
         {
             path: '/register',
             name: "register",
             component: Register,
-            meta: getMetaFor(false)
+            meta: getMeta(false)
         },
         {
             path: '/employee',
             name: "employeeHome",
             component: EmployeeHome,
-            meta: getMetaFor(true, EMPLOYEE_ID)
+            meta: getMeta(true, EMPLOYEE_ID)
         },
         {
             path: '/teller',
             name: "tellerHome",
             component: EmployeeHome,
-            meta: getMetaFor(true, TELLER_ID)
+            meta: getMeta(true, TELLER_ID)
         },
         // {
         //     path: '*',
@@ -49,7 +51,7 @@ const router = new VueRouter({
     ]
 });
 
-function getMetaFor(isAuthorized, role = null) {
+function getMeta(isAuthorized, role = null) {
     if (!role) {
         return {authRequired: isAuthorized, role: null};
     }
@@ -64,19 +66,21 @@ function routeRequiresToBeAuthorized(route) {
     return route.meta.authRequired;
 }
 
-function routeMatchesUserRole(route, role) {
-    if (!role) return false;
-    return !route.meta.role || route.meta.role === role;
+function routeMatchesUserRole(route, roles) {
+    if (!roles) return false;
+    return !route.meta.role || roles.includes(route.meta.role);
 }
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     const access = getAccessInfo();
+
     if (routeRequiresToBeAuthorized(to)) {
         if (access && tokenDidntExpire(access.expireDate)) {
-            if (routeMatchesUserRole(to, access.role)) {
+            const userRoles = store.getters["user/userRoles"];
+            if (routeMatchesUserRole(to, userRoles)) {
                 next();
             } else {
-                next({name: from.name});
+                next(false);
             }
         } else {
             next({name: 'login'});

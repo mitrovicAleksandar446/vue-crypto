@@ -5,11 +5,16 @@ import {JWT_TOKEN_NAME} from "../config";
 
 export {
     getAccessInfo,
+    tokenExists,
     getToken
 }
 
 function getAccessInfo() {
-    return Storage.hasInLocal(JWT_TOKEN_NAME) ? JSON.parse(Storage.getFromLocal(JWT_TOKEN_NAME)) : null;
+    return tokenExists() ? JSON.parse(Storage.getFromLocal(JWT_TOKEN_NAME)) : null;
+}
+
+function tokenExists() {
+    return Storage.hasInLocal(JWT_TOKEN_NAME);
 }
 
 function getToken() {
