@@ -5,7 +5,7 @@
             <div class="container">
                 <div class="columns">
                     <div class="column is-2">
-                        <Sidebar v-bind:options="sidebarOptions"></Sidebar>
+                        <Sidebar v-bind:options.sync="sidebarOptions"></Sidebar>
                     </div>
                     <div class="column is-10">
                         <h1>Employee</h1>

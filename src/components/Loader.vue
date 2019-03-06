@@ -9,6 +9,7 @@
 
     export default {
         name: "Loader",
+
         computed: {
             ...mapState({
                 active: state => state.loader.active

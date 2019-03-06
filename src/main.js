@@ -10,7 +10,9 @@ import '@fortawesome/fontawesome-free/css/all.css';
 
 Vue.config.productionTip = false;
 
-Vue.use(Buefy);
+Vue.use(Buefy,  {
+    defaultIconPack: 'fa'
+});
 Vue.use(VeeValidate);
 
 StoreBootstrap.bootActions()

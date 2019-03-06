@@ -1,12 +1,15 @@
 'use strict';
 
 import Storage from "../services/Storage";
-import {JWT_TOKEN_NAME} from "../config";
+import {API_ROOT, JWT_TOKEN_NAME} from "../config";
 
 export {
     getAccessInfo,
     tokenExists,
-    getToken
+    getToken,
+    isTokenValid,
+    removeToken,
+    filesystem
 }
 
 function getAccessInfo() {
@@ -21,4 +24,19 @@ function getToken() {
     const access = getAccessInfo();
     if (access) return access.token;
     return null;
+}
+
+function isTokenValid() {
+    const access = getAccessInfo();
+    if (!access) return false;
+    return access.token && access.expireDate > new Date;
+}
+
+function removeToken() {
+    Storage.destroyLocal(JWT_TOKEN_NAME);
+}
+
+function filesystem(path) {
+    const validatedPath = path[0] === "/" ? path : `/${path}`;
+    return `${API_ROOT}/filesystem${validatedPath}`;
 }

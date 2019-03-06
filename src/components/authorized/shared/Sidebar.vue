@@ -4,7 +4,7 @@
             options
         </p>
         <ul class="menu-list">
-            <li v-for="(option, name) in options" v-bind:key="name">
+            <li v-for="(option, name) in options" @click="setActive(name)" v-bind:key="name">
                 <router-link :to="option.href" v-bind:class='{"is-active": option.active}'>
                     {{ name }}
                 </router-link>
@@ -16,10 +16,26 @@
 <script>
     export default {
         name: "Sidebar",
+
         props: {
             options: {
                 type: Object,
                 required: true
+            }
+        },
+
+        methods:{
+            setActive(activeName) {
+                for (const [key, option] of Object.entries(this.options)) {
+                    option.active = key === activeName;
+                }
+            }
+        },
+
+        mounted() {
+            const currentRoute = this.$route.path;
+            for (const option of Object.values(this.options)) {
+                option.active = currentRoute === option.href.path;
             }
         }
     }

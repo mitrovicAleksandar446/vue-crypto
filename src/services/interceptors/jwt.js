@@ -1,9 +1,9 @@
-import {getToken} from './../../utils/helpers'
+import {getToken, isTokenValid} from './../../utils/helpers'
 
 export default {
     success: config => {
-        const token = getToken();
-        if (token) {
+        if (isTokenValid()) {
+            const token = getToken();
             config.headers.common["Authorization"] = `Bearer ${token}`;
         }
         return config;

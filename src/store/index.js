@@ -6,15 +6,12 @@ import walletModule from './wallet'
 import loaderModule from './loader'
 import contractModule from './contract'
 import inactiveUsersModule from './inactiveUsers'
+import perkModule from './perk'
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
     strict: process.env.NODE_ENV !== "production",
-
-    state: {
-        currentPage: null
-    },
 
     modules: {
         user: userModule,
@@ -22,7 +19,8 @@ const store = new Vuex.Store({
         wallet: walletModule,
         loader: loaderModule,
         contract: contractModule,
-        inactiveUsers: inactiveUsersModule
+        inactiveUsers: inactiveUsersModule,
+        perk: perkModule
     }
 });
 

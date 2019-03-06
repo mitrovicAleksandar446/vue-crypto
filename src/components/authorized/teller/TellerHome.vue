@@ -5,7 +5,7 @@
             <div class="container">
                 <div class="columns">
                     <div class="column is-2">
-                        <Sidebar v-bind:options="sidebarOptions"></Sidebar>
+                        <Sidebar v-bind:options.sync="sidebarOptions"></Sidebar>
                     </div>
                     <div class="column is-10">
                         <router-view></router-view>
@@ -30,8 +30,8 @@
                         href: "wwww.google.com",
                         active: true
                     },
-                    "Link2" : {
-                        href: "wwww.yahoo.com",
+                    "Perks" : {
+                        href: {name: "managePerks"},
                         active: false
                     },
                     "Inactive users" : {

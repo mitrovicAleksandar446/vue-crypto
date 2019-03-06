@@ -4,6 +4,8 @@ import Home from "../components/Home";
 import Login from "../components/unauthorized/login/LoginForm";
 import Register from "../components/unauthorized/register/RegisterForm";
 import InactiveUsers from "../components/authorized/teller/users/InactiveUsers";
+import ManagePerks from "../components/authorized/teller/perks/ManagePerks";
+import NewPerk from "../components/authorized/teller/perks/NewPerk";
 
 import {EMPLOYEE_ID, TELLER_ID} from "../utils/role-types";
 
@@ -48,6 +50,18 @@ export default [
                 path: '/inactive-users',
                 name: "inactiveUsers",
                 component: InactiveUsers,
+                meta: getMeta(true, TELLER_ID)
+            },
+            {
+                path: '/manage-perks',
+                name: "managePerks",
+                component: ManagePerks,
+                meta: getMeta(true, TELLER_ID)
+            },
+            {
+                path: '/new-perk',
+                name: "newPerk",
+                component: NewPerk,
                 meta: getMeta(true, TELLER_ID)
             }
         ]
