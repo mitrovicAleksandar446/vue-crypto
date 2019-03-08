@@ -1,11 +1,11 @@
 import EmployeeHome from "../components/authorized/employee/EmployeeHome";
 import TellerHome from "../components/authorized/teller/TellerHome";
-import Home from "../components/Home";
 import Login from "../components/unauthorized/login/LoginForm";
 import Register from "../components/unauthorized/register/RegisterForm";
 import InactiveUsers from "../components/authorized/teller/users/InactiveUsers";
 import ManagePerks from "../components/authorized/teller/perks/ManagePerks";
 import NewPerk from "../components/authorized/teller/perks/NewPerk";
+import EditPerk from "../components/authorized/teller/perks/EditPerk";
 
 import {EMPLOYEE_ID, TELLER_ID} from "../utils/role-types";
 
@@ -19,8 +19,8 @@ function getMeta(isAuthorized, role = null) {
 export default [
 
     {
-        path: '/home',
-        component: Home
+        path: '/',
+        redirect: { name: 'login' }
     },
     {
         path: '/login',
@@ -53,8 +53,8 @@ export default [
                 meta: getMeta(true, TELLER_ID)
             },
             {
-                path: '/manage-perks',
-                name: "managePerks",
+                path: '/perks',
+                name: "perks",
                 component: ManagePerks,
                 meta: getMeta(true, TELLER_ID)
             },
@@ -62,6 +62,12 @@ export default [
                 path: '/new-perk',
                 name: "newPerk",
                 component: NewPerk,
+                meta: getMeta(true, TELLER_ID)
+            },
+            {
+                path: '/perks/:id',
+                name: "editPerk",
+                component: EditPerk,
                 meta: getMeta(true, TELLER_ID)
             }
         ]

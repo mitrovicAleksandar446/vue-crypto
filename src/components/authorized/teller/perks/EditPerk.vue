@@ -1,5 +1,5 @@
 <template>
-    <section>
+    <section v-if="perk">
         <div>
             <router-link :to="{name: 'perks'}" class="button is-buefy">
                 <i class="fas fa-chevron-left"></i>
@@ -7,12 +7,12 @@
             </router-link>
         </div>
         <div class="form-wrapper">
-            <form @submit.prevent="validateBeforeCreate">
+            <form @submit.prevent="validateBeforeUpdate">
                 <b-field label="Name"
                          :type="{'is-danger': errors.has('name')}"
                          :message="errors.first('name')">
                     <b-input type="text"
-                             v-model="perk.name"
+                             v-model="name"
                              v-validate="'required|min:3'"
                              name="name"
                              maxlength="30"
@@ -21,37 +21,41 @@
                     </b-input>
                 </b-field>
                 <b-field label="Description"
-                          maxlength="200">
+                         maxlength="200">
                     <b-input type="textarea"
-                             v-model="perk.description"
+                             v-model="description"
                              name="description"
                              maxlength="200"
                              placeholder="Name here...">
 
                     </b-input>
                 </b-field>
+                <b-field label="Image">
+                    <figure class="image is-4by3">
+                        <img :src="image" alt="perk-image"/>
+                    </figure>
+                </b-field>
                 <b-field class="file"
                          :type="{'is-danger': errors.has('image')}"
                          :message="errors.first('image')">
                     <b-upload accept="image/*"
-                              v-model="perk.image"
+                              v-model="file"
                               data-vv-as="image"
-                              v-validate="'required'"
                               name="image">
                         <a class="button is-buefy">
                             <b-icon icon="upload"></b-icon>
                             <span>Upload image</span>
                         </a>
                     </b-upload>
-                    <span class="file-name" v-if="perk.image">
-                        {{ perk.image.name }}
+                    <span class="file-name" v-if="file">
+                        {{ file.name }}
                     </span>
                 </b-field>
                 <b-field label="Value"
                          :type="{'is-danger': errors.has('value')}"
                          :message="errors.first('value')">
                     <b-input type="number"
-                             v-model="perk.value"
+                             v-model="value"
                              v-validate="'required|numeric|min_value:1'"
                              name="value"
                              placeholder="Value here...">
@@ -60,7 +64,7 @@
                 </b-field>
                 <b-field>
                     <button type="submit" class="button is-buefy">
-                        Create
+                        Update
                     </button>
                 </b-field>
             </form>
@@ -69,45 +73,90 @@
 </template>
 
 <script>
-    import {mapActions} from 'vuex';
+    import {mapActions} from 'vuex'
+    import {mapState} from 'vuex'
 
     export default {
-        name: "NewPerk",
+        name: "EditPerk",
 
         data() {
             return {
-                perk: {
-                    name: null,
-                    description: null,
-                    image: null,
-                    value: 1
+                file: null,
+                perkId: this.$route.params.id
+            }
+        },
+
+        created() {
+            this.getPerk(this.perkId);
+        },
+
+        computed: {
+            ...mapState({
+                perk: state => state.perk.perk
+            }),
+
+            name: {
+                get () {
+                    return this.perk.name;
+                },
+
+                set(name) {
+                    this.$store.commit('perk/setPerk', {name});
+                }
+            },
+
+            description: {
+                get () {
+                    return this.perk.description;
+                },
+
+                set(description) {
+                    this.$store.commit('perk/setPerk', {description});
+                }
+            },
+
+            value: {
+                get () {
+                    return this.perk.value;
+                },
+
+                set(value) {
+                    this.$store.commit('perk/setPerk', {value});
+                }
+            },
+
+            image: {
+                get () {
+                    return this.perk.image;
+                },
+
+                set(image) {
+                    this.$store.commit('perk/setPerk', {image});
                 }
             }
         },
 
         methods: {
+            ...mapActions('perk', ['getPerk', 'updatePerk']),
 
-            ...mapActions('perk', ['createNewPerk']),
-
-            validateBeforeCreate() {
-                this.$validator.validateAll().then(this.create);
+            validateBeforeUpdate() {
+                this.$validator.validateAll().then(this.update);
             },
 
-            create(valid) {
-
+            update(valid) {
                 if (valid) {
-                    const payload = new FormData();
-                    payload.append("name", this.perk.name);
-                    if (this.perk.description) {
-                        payload.append("description", this.perk.description);
+                    const payload = new FormData;
+                    payload.append("name", this.name);
+                    payload.append("description", this.description);
+                    payload.append("value", this.value);
+                    if (this.file) {
+                        payload.append("image", this.file);
                     }
-                    payload.append("image", this.perk.image);
-                    payload.append("value", this.perk.value);
 
-                    this.createNewPerk(payload)
+                    this.updatePerk({payload: payload, perkId: this.perkId})
                         .then(() => {
                             this.$toast.open({
-                                message: 'Perk created',
+                                message: 'Perk updated',
                                 type: 'is-success',
                                 position: 'is-top-right'
                             });
@@ -119,6 +168,8 @@
                                 position: 'is-top-right'
                             });
                         });
+
+                    setTimeout(() => this.$router.push({name: 'perks'}), 1000);
                 }
             }
         }

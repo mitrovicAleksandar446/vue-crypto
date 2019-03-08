@@ -4,6 +4,8 @@ import userApi from './../../services/api/user'
 import ethWallet from './../../services/eth/wallet'
 import Storage from './../../services/Storage'
 import {JWT_TOKEN_NAME} from './../../config'
+import {isTokenValid, removeToken} from "../../utils/helpers";
+import {EventBus} from "../../services/eventBus";
 
 const state = {
     authUser: null
@@ -57,14 +59,24 @@ const actions = {
         return userApi.getUser()
             .then(user => {
                 commit('setAuthUser', user);
+            })
+            .catch(err => {
+                EventBus.$emit('i-got-401-error', err);
             });
     },
 
     signOut() {
-        userApi.signOut()
-            .then(() => {
-                Storage.destroyLocal(JWT_TOKEN_NAME);
+        if (isTokenValid()) {
+            return userApi.signOut()
+                .then(() => {
+                    removeToken();
+                });
+        } else {
+            return new Promise((resolve) => {
+                removeToken();
+                resolve(true);
             });
+        }
     }
 };
 

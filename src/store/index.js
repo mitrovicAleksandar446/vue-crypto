@@ -5,7 +5,7 @@ import dialogModule from './dialog'
 import walletModule from './wallet'
 import loaderModule from './loader'
 import contractModule from './contract'
-import inactiveUsersModule from './inactiveUsers'
+import tellerModule from './teller'
 import perkModule from './perk'
 
 Vue.use(Vuex);
@@ -19,7 +19,7 @@ const store = new Vuex.Store({
         wallet: walletModule,
         loader: loaderModule,
         contract: contractModule,
-        inactiveUsers: inactiveUsersModule,
+        teller: tellerModule,
         perk: perkModule
     }
 });

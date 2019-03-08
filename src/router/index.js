@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import store from './../store/'
 import routes from './routes'
 import {isTokenValid} from "../utils/helpers";
+import {TELLER_ID} from "../utils/role-types";
 
 Vue.use(VueRouter);
 
@@ -17,6 +18,14 @@ function routeMatchesUserRole(route, roles) {
     return !route.meta.role || roles.includes(route.meta.role);
 }
 
+function redirectToHomePage(roles, next) {
+    if (roles.includes(TELLER_ID)) {
+        next({name: 'tellerHome'});
+    } else {
+        next({name: 'employeeHome'});
+    }
+}
+
 router.beforeEach(async (to, from, next) => {
 
     if (routeRequiresToBeAuthorized(to)) {
@@ -29,9 +38,16 @@ router.beforeEach(async (to, from, next) => {
             }
         } else {
             next({name: 'login'});
+            store.dispatch('user/signOut');
         }
     } else {
-        next();
+        if (isTokenValid()) {
+            const userRoles = store.getters["user/userRoles"];
+            redirectToHomePage(userRoles, next);
+            //next({name: from.name});
+        } else {
+            next();
+        }
     }
 });
 

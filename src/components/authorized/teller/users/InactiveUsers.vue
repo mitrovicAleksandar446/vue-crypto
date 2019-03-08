@@ -39,12 +39,12 @@
 
         computed: {
             ...mapState({
-                users: state => state.inactiveUsers.inactiveUsersList
+                users: state => state.teller.inactiveUsersList
             })
         },
 
         methods: {
-            ...mapActions('inactiveUsers', ['getInactiveUsersList', 'activateUser']),
+            ...mapActions('teller', ['getInactiveUsersList', 'activateUser']),
 
             activateInactiveUser(userId) {
                 this.activateUser(userId)

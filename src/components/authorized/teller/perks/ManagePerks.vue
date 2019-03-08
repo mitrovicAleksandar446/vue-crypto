@@ -12,13 +12,13 @@
                     <p class="subtitle tag is-buefy">{{ perk.value }} QXC</p>
                     <p class="subtitle">{{ perk.description }}</p>
                     <figure class="image is-4by3">
-                        <img :src="perk.image">
+                        <img :src="perk.image" alt="perk-image"/>
                     </figure>
                     <article class="tile-footer tile is-child notification is-primary">
-                        <a class="button is-buefy">
+                        <a class="button is-buefy" @click="destroy(perk.id)">
                             Delete
                         </a>
-                        <a class="button is-buefy">
+                        <a class="button is-buefy" @click="openEdit(perk.id)">
                             Edit
                         </a>
                     </article>
@@ -45,7 +45,30 @@
         },
 
         methods: {
-            ...mapActions('perk', ['getAllPerks'])
+            ...mapActions('perk', ['getAllPerks', 'destroyPerk']),
+
+            destroy(perkId) {
+
+                this.destroyPerk(perkId)
+                    .then(() => {
+                        this.$toast.open({
+                            message: 'Perk deleted',
+                            type: 'is-success',
+                            position: 'is-top-right'
+                        });
+                    }).catch(err => {
+                        this.$toast.open({
+                            message: err.message,
+                            type: 'is-danger',
+                            position: 'is-top-right'
+                        });
+                });
+            },
+
+            openEdit(perkId) {
+
+                this.$router.push({name: "editPerk", params: {id: perkId}});
+            }
         },
 
         created() {
@@ -60,7 +83,7 @@
     }
 
     .tile-footer {
-        text-align:center;
+        text-align: center;
     }
 
     .tile-footer > a {

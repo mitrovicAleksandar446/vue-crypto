@@ -31,7 +31,7 @@
                         active: true
                     },
                     "Perks" : {
-                        href: {name: "managePerks"},
+                        href: {name: "perks"},
                         active: false
                     },
                     "Inactive users" : {
