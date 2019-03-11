@@ -6,6 +6,9 @@ import InactiveUsers from "../components/authorized/teller/users/InactiveUsers";
 import ManagePerks from "../components/authorized/teller/perks/ManagePerks";
 import NewPerk from "../components/authorized/teller/perks/NewPerk";
 import EditPerk from "../components/authorized/teller/perks/EditPerk";
+import ManageAchievements from "../components/authorized/teller/achievements/ManageAchievements";
+import NewAchievement from "../components/authorized/teller/achievements/NewAchievement";
+import EditAchievement from "../components/authorized/teller/achievements/EditAchievement";
 
 import {EMPLOYEE_ID, TELLER_ID} from "../utils/role-types";
 
@@ -52,6 +55,7 @@ export default [
                 component: InactiveUsers,
                 meta: getMeta(true, TELLER_ID)
             },
+            // Perks
             {
                 path: '/perks',
                 name: "perks",
@@ -69,7 +73,26 @@ export default [
                 name: "editPerk",
                 component: EditPerk,
                 meta: getMeta(true, TELLER_ID)
-            }
+            },
+            // Achievements
+            {
+                path: '/achievements',
+                name: "achievements",
+                component: ManageAchievements,
+                meta: getMeta(true, TELLER_ID)
+            },
+            {
+                path: '/new-achievement',
+                name: "newAchievement",
+                component: NewAchievement,
+                meta: getMeta(true, TELLER_ID)
+            },
+            {
+                path: '/achievements/:id',
+                name: "editAchievement",
+                component: EditAchievement,
+                meta: getMeta(true, TELLER_ID)
+            },
         ]
     },
     // {

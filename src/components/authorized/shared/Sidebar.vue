@@ -43,7 +43,8 @@
 
 <style lang="scss" scoped>
     .menu-list li {
-        margin: 5px
+        margin: 5px;
+        font-size: 16px;
     }
 
     .menu-list li > a {

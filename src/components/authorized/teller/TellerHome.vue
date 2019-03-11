@@ -26,8 +26,8 @@
         data() {
             return {
                 sidebarOptions: {
-                    "Link1" : {
-                        href: "wwww.google.com",
+                    "Achievements" : {
+                        href: {name: "achievements"},
                         active: true
                     },
                     "Perks" : {

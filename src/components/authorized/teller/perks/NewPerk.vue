@@ -111,6 +111,7 @@
                                 type: 'is-success',
                                 position: 'is-top-right'
                             });
+                            setTimeout(() => this.$router.push({name: 'perks'}), 1000);
                         })
                         .catch(err => {
                             this.$toast.open({

@@ -15,7 +15,7 @@
                         <img :src="perk.image" alt="perk-image"/>
                     </figure>
                     <article class="tile-footer tile is-child notification is-primary">
-                        <a class="button is-buefy" @click="destroy(perk.id)">
+                        <a class="button is-buefy" @click="openDeleteDialog(perk.id)">
                             Delete
                         </a>
                         <a class="button is-buefy" @click="openEdit(perk.id)">
@@ -46,9 +46,19 @@
 
         methods: {
             ...mapActions('perk', ['getAllPerks', 'destroyPerk']),
+            ...mapActions('dialog', ['showDialog']),
+
+            openDeleteDialog(perkId) {
+                this.showDialog({
+                    status: 'confirm',
+                    message: "Are you sure you want to delete this perk ?",
+                    cancelText: 'No',
+                    confirmText: 'Yes',
+                    onConfirm: () => this.destroy(perkId)
+                });
+            },
 
             destroy(perkId) {
-
                 this.destroyPerk(perkId)
                     .then(() => {
                         this.$toast.open({
@@ -58,7 +68,7 @@
                         });
                     }).catch(err => {
                         this.$toast.open({
-                            message: err.message,
+                            message: err.response.data.message,
                             type: 'is-danger',
                             position: 'is-top-right'
                         });
@@ -66,7 +76,6 @@
             },
 
             openEdit(perkId) {
-
                 this.$router.push({name: "editPerk", params: {id: perkId}});
             }
         },

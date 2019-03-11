@@ -7,6 +7,7 @@ import loaderModule from './loader'
 import contractModule from './contract'
 import tellerModule from './teller'
 import perkModule from './perk'
+import achievementModule from './achievement'
 
 Vue.use(Vuex);
 
@@ -20,7 +21,8 @@ const store = new Vuex.Store({
         loader: loaderModule,
         contract: contractModule,
         teller: tellerModule,
-        perk: perkModule
+        perk: perkModule,
+        achievement: achievementModule
     }
 });
 

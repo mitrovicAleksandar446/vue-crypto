@@ -86,17 +86,13 @@
             }
         },
 
-        created() {
-            this.getPerk(this.perkId);
-        },
-
         computed: {
             ...mapState({
                 perk: state => state.perk.perk
             }),
 
             name: {
-                get () {
+                get() {
                     return this.perk.name;
                 },
 
@@ -106,7 +102,7 @@
             },
 
             description: {
-                get () {
+                get() {
                     return this.perk.description;
                 },
 
@@ -116,7 +112,7 @@
             },
 
             value: {
-                get () {
+                get() {
                     return this.perk.value;
                 },
 
@@ -126,7 +122,7 @@
             },
 
             image: {
-                get () {
+                get() {
                     return this.perk.image;
                 },
 
@@ -160,6 +156,7 @@
                                 type: 'is-success',
                                 position: 'is-top-right'
                             });
+                            setTimeout(() => this.$router.push({name: 'perks'}), 1000);
                         })
                         .catch(err => {
                             this.$toast.open({
@@ -168,21 +165,19 @@
                                 position: 'is-top-right'
                             });
                         });
-
-                    setTimeout(() => this.$router.push({name: 'perks'}), 1000);
                 }
             }
+        },
+
+        created() {
+            this.getPerk(this.perkId);
         }
     }
 </script>
 
 <style scoped>
     .form-wrapper {
-        margin-top:30px;
-        max-width:500px;
-    }
-
-    .upload {
-        margin-right:10px;
+        margin-top: 30px;
+        max-width: 500px;
     }
 </style>

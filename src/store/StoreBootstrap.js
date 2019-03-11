@@ -9,18 +9,16 @@ class StoreBootstrap {
         this.bootableActions = actions;
     }
 
-    async bootActions() {
+    bootActions() {
 
-        for (const boot of this.bootableActions) {
-            if (this.actionCanBeExecuted(boot)) {
-
-                if (boot.hasDependence) {
-                    await this.store.dispatch(boot.action);
-                } else {
-                    this.store.dispatch(boot.action);
-                }
+        let chain = this.bootableActions.reduce((prev, curr) => {
+            if (this.actionCanBeExecuted(curr)) {
+                return this.store.dispatch(prev.action)
+                    .then(() => this.store.dispatch(curr.action));
             }
-        }
+        });
+        if (!chain) chain = Promise.resolve();
+        return chain;
     }
 
     actionCanBeExecuted(bootAction) {

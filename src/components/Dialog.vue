@@ -20,7 +20,15 @@
         },
 
         mounted() {
-            this.$dialog.alert(this.data);
+
+            switch (this.data.status) {
+                case 'confirm':
+                    this.$dialog.confirm(this.data);
+                    break;
+                default:
+                    this.$dialog.alert(this.data);
+                    break;
+            }
             this.hideDialog();
         }
     }
