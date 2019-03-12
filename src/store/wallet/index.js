@@ -18,6 +18,7 @@ const mutations = {
 };
 
 const actions = {
+
     createWallet({commit}, userData) {
         const mnemonic = bip39.generateMnemonic();
         commit('setMnemonic', mnemonic);
@@ -26,8 +27,16 @@ const actions = {
     },
 
     loadWallet({commit}, userData) {
-        const wallet = ethWallet.load(userData.email, userData.password);
-        commit('setWallet', wallet);
+
+        return new Promise((resolve, reject) => {
+            const wallet = ethWallet.load(userData.email, userData.password);
+            if (wallet) {
+                commit('setWallet', wallet);
+                resolve(wallet);
+            }
+            reject(new Error("Wallet doesn't exist"));
+        });
+
     }
 };
 

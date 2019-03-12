@@ -31,7 +31,7 @@ const actions = {
             .then(contract => {
                 commit("setContractAddress", contract.address);
                 commit("setTellerAddress", contract.teller_addresses[0]);
-
+                
                 const fromAddress = rootState.user.authUser.address;
                 const ethContract = contractEth.create(contract.abi, state.contractAddress, fromAddress);
                 commit('setContract', ethContract);

@@ -84,8 +84,9 @@
             ...mapActions('user', ["signOut"]),
 
             logout() {
-                this.signOut();
-                this.$router.replace({name: "login"});
+                this.signOut()
+                    .then(() => this.$router.replace({name: "login"}));
+
             },
 
             toggleBurger() {
