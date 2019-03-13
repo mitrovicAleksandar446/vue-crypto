@@ -14,6 +14,7 @@
     import Loader from './components/Loader.vue';
     import {mapState} from 'vuex';
     import {mapActions} from 'vuex';
+    import {isTokenValid} from "./utils/helpers";
 
     export default {
         name: 'app',
@@ -40,12 +41,19 @@
             ...mapActions("loader", ["activateLoader"]),
             ...mapActions("user", ["getUser"]),
             ...mapActions("contract", ["createContract"]),
+            ...mapActions("wallet", ["readWallet"]),
 
             initApp() {
 
                 return new Promise(async (resolve) => {
-                    await this.getUser();
-                    this.createContract();
+                    if (isTokenValid()) {
+                        await this.getUser();
+                        return this.createContract()
+                            .then(() => {
+                                this.readWallet();
+                                resolve(true)
+                            });
+                    }
                     resolve(true);
                 });
             }

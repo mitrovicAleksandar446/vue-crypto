@@ -8,9 +8,8 @@
                             <div class="container">
                                 <i class="is-large fab fa-ethereum"></i>
                                 <i class="is-large fas">QXC</i>
-                                <h1 class="title">Code <em>All</em> The Things</h1>
-                                <h3 class="subtitle">
-                                    Collection of code goodies
+                                <h3 class="subtitle" v-if="user">
+                                    <u><i>Welcome back</i></u> :&nbsp; <span class="tag is-info is-large">{{ user.name }}</span>
                                 </h3>
                             </div>
                         </div>
@@ -36,22 +35,37 @@
                 <div id="navbarBasicExample" :class="{'navbar-menu': true, 'is-active': burgerActive}">
                     <div class="navbar-start">
                         <a href="http://git.quantox.tech/aleksa446/quantox-vue" class="navbar-item">
-                        <span class="icon">
-                          <i class="fab fa-github"></i>
-                        </span>
+                            <span class="icon">
+                              <i class="fab fa-github"></i>
+                            </span>
                             <span>Project</span>
                         </a>
+                        <router-link :to="{name: 'recoverWallet'}" class="navbar-item">
+                            <span class="icon">
+                              <i class="fas fa-wallet"></i>
+                            </span>
+                            <span>Recover wallet</span>
+                        </router-link>
+                        <a @click.prevent="logout" class="navbar-item">
+                            <span class="icon">
+                              <i class="fas fa-sign-out-alt"></i>
+                            </span>
+                            <span>Sign out</span>
+                        </a>
                     </div>
-
                     <div class="navbar-end">
                         <div class="navbar-item">
-                            <div class="buttons">
-                                <a @click.prevent="logout" class="button is-primary">
-                                        <span class="icon">
-                                            <i class="fas fa-sign-out-alt"></i>
-                                        </span>
-                                    <span>Sign out</span>
-                                </a>
+                            <div v-if="user" :class="{'tag': true, 'is-danger': !user.active, 'is-success': user.active}">
+                                <span class="icon">
+                                    <i :class="{'fas': true, 'fa-check-circle': user.active, 'fa-times-circle': !user.active}"></i>
+                                </span>
+                                <span>{{ user.active ? "active": "inactive" }}</span>
+                            </div>
+                            <div :class="{'tag': true, 'is-danger': !wallet, 'is-success': wallet}">
+                                <span class="icon">
+                                    <i :class="{'fas': true, 'fa-check-circle': wallet, 'fa-times-circle': !wallet}"></i>
+                                </span>
+                                <span>{{ wallet ? "has wallet": "wallet not found" }}</span>
                             </div>
                         </div>
                     </div>
@@ -76,7 +90,8 @@
 
         computed: {
             ...mapState({
-                user: state => state.user.authUser
+                user: state => state.user.authUser,
+                wallet: state => state.wallet.wallet
             })
         },
 

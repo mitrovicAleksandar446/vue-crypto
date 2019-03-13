@@ -84,6 +84,16 @@
 </script>
 
 <style scoped>
+    .title {
+        overflow: hidden;
+        height: 35px;
+    }
+
+    .subtitle {
+        overflow: hidden;
+        height: 27px;
+    }
+
     .is-ancestor {
         margin-top: 10px;
     }
@@ -94,5 +104,6 @@
 
     .tile-footer > a {
         margin-left: 5px;
+        margin-top: 5px;
     }
 </style>

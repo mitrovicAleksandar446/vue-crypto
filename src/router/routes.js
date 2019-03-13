@@ -1,6 +1,7 @@
 import EmployeeHome from "../components/authorized/employee/EmployeeHome";
 import TellerHome from "../components/authorized/teller/TellerHome";
 import Login from "../components/unauthorized/login/LoginForm";
+import RecoverWallet from "../components/authorized/shared/recoverWallet/RecoverWalletForm";
 import Register from "../components/unauthorized/register/RegisterForm";
 import InactiveUsers from "../components/authorized/teller/users/InactiveUsers";
 import ManagePerks from "../components/authorized/teller/perks/ManagePerks";
@@ -92,6 +93,12 @@ export default [
                 name: "editAchievement",
                 component: EditAchievement,
                 meta: getMeta(true, TELLER_ID)
+            },
+            {
+                path: '/recover-wallet',
+                name: "recoverWallet",
+                component: RecoverWallet,
+                meta: getMeta(true, null)
             },
         ]
     },

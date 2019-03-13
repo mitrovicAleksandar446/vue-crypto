@@ -65,15 +65,18 @@ const actions = {
             });
     },
 
-    signOut() {
+    signOut({dispatch, commit}) {
         if (isTokenValid()) {
             return userApi.signOut()
                 .then(() => {
                     removeToken();
+                    commit('setAuthUser', null);
+                    dispatch('wallet/clearWallet', null, {root: true});
                 });
         } else {
             return new Promise((resolve) => {
                 removeToken();
+                commit('setAuthUser', null);
                 resolve(true);
             });
         }
