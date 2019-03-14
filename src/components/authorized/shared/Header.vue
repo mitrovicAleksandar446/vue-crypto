@@ -2,17 +2,10 @@
     <section>
         <section class="hero is-primary">
             <div class="hero-body">
-                <div class="columns">
-                    <div class="column is-12">
-                        <div class="container content">
-                            <div class="container">
-                                <i class="is-large fab fa-ethereum"></i>
-                                <i class="is-large fas">QXC</i>
-                                <h3 class="subtitle" v-if="user">
-                                    <u><i>Welcome back</i></u> :&nbsp; <span class="tag is-info is-large">{{ user.name }}</span>
-                                </h3>
-                            </div>
-                        </div>
+                <div class="container content">
+                    <div class="container">
+                        <i class="is-large fab fa-ethereum"></i>
+                        <i class="is-large fas">QXC</i>
                     </div>
                 </div>
             </div>
@@ -55,17 +48,23 @@
                     </div>
                     <div class="navbar-end">
                         <div class="navbar-item">
+                            <div v-if="user" class="tag">
+                                <span class="icon">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                                <span>{{ user.name }}</span>
+                            </div>
                             <div v-if="user" :class="{'tag': true, 'is-danger': !user.active, 'is-success': user.active}">
                                 <span class="icon">
                                     <i :class="{'fas': true, 'fa-check-circle': user.active, 'fa-times-circle': !user.active}"></i>
                                 </span>
-                                <span>{{ user.active ? "active": "inactive" }}</span>
+                                <span>active</span>
                             </div>
                             <div :class="{'tag': true, 'is-danger': !wallet, 'is-success': wallet}">
                                 <span class="icon">
                                     <i :class="{'fas': true, 'fa-check-circle': wallet, 'fa-times-circle': !wallet}"></i>
                                 </span>
-                                <span>{{ wallet ? "has wallet": "wallet not found" }}</span>
+                                <span>wallet</span>
                             </div>
                         </div>
                     </div>

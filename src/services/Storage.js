@@ -81,6 +81,10 @@ class Storage {
     flush() {
         return this.flushLocal() && this.flushSession();
     }
+
+    sessionEmpty() {
+        return !this.sessionStorage.length;
+    }
 }
 
 export default new Storage;

@@ -5,7 +5,8 @@ import Buefy from 'buefy';
 import router from './router';
 import store from './store';
 import {EventBus} from "./services/eventBus";
-import {handleUnauthenticatedHandler, handleNotFoundHandler} from './errorHandlers/handlers';
+import {unauthenticatedUserHandler, notFoundHandler} from './handlers/errorHandlers/';
+import {sessionStoragePersistenceHandler, triggerSessionStoragePersistence} from './handlers/sessionStoragePersistenceHandler/';
 
 import '@fortawesome/fontawesome-free/css/all.css';
 
@@ -14,8 +15,11 @@ Vue.config.productionTip = false;
 Vue.use(Buefy,  {defaultIconPack: 'fa'});
 Vue.use(VeeValidate);
 
-EventBus.$on('i-got-401-error', handleUnauthenticatedHandler);
-EventBus.$on('i-got-404-error', handleNotFoundHandler);
+triggerSessionStoragePersistence();
+
+window.addEventListener("storage", sessionStoragePersistenceHandler);
+EventBus.$on('i-got-401-error', unauthenticatedUserHandler);
+EventBus.$on('i-got-404-error', notFoundHandler);
 
 new Vue({
     router,

@@ -43,19 +43,12 @@
             ...mapActions("contract", ["createContract"]),
             ...mapActions("wallet", ["readWallet"]),
 
-            initApp() {
-
-                return new Promise(async (resolve) => {
-                    if (isTokenValid()) {
-                        await this.getUser();
-                        return this.createContract()
-                            .then(() => {
-                                this.readWallet();
-                                resolve(true)
-                            });
-                    }
-                    resolve(true);
-                });
+            async initApp() {
+                if (isTokenValid()) {
+                    await this.getUser();
+                    await this.createContract();
+                    this.readWallet();
+                }
             }
         },
 
