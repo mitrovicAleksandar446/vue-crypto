@@ -32,8 +32,7 @@
 
         computed: {
             ...mapState({
-                dialogData: state => state.dialog.data,
-                user: state => state.user.authUser
+                dialogData: state => state.dialog.data
             })
         },
 

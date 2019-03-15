@@ -77,6 +77,7 @@ const actions = {
             return new Promise((resolve) => {
                 removeToken();
                 commit('setAuthUser', null);
+                dispatch('wallet/clearWallet', null, {root: true});
                 resolve(true);
             });
         }

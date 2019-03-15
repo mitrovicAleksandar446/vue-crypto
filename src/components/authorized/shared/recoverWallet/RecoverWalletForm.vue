@@ -16,16 +16,15 @@
                                  name="password"
                                  v-validate="'required|min:3'"
                                  placeholder="Password here" maxlength="30">
-
                         </b-input>
                     </b-field>
 
                     <b-field label="Confirm password"
                              :type="{'is-danger': errors.has('passwordConfirm')}"
                              :message="[{
-                            'The confirm password field is required' : errors.firstByRule('passwordConfirm', 'required'),
-                            'The confirm password is not valid' : errors.firstByRule('passwordConfirm', 'is')
-                         }]">
+                                'The confirm password field is required' : errors.firstByRule('passwordConfirm', 'required'),
+                                'The confirm password is not valid' : errors.firstByRule('passwordConfirm', 'is')
+                             }]">
                         <b-input type="password"
                                  v-model="passwordConfirm"
                                  name="passwordConfirm"
@@ -41,7 +40,6 @@
                                  name="mnemonic"
                                  maxlength="200"
                                  placeholder="Mnemonic here...">
-
                         </b-input>
                     </b-field>
 

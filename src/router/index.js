@@ -26,11 +26,20 @@ function redirectToHomePage(roles, next) {
     }
 }
 
+async function getUserRoles() {
+    if (!store.state.user.authUser) {
+        await store.dispatch("user/getUser");
+    }
+    return store.getters["user/userRoles"];
+}
+
+router.onError(() => alert("asdasd"));
+
 router.beforeEach(async (to, from, next) => {
 
     if (routeRequiresToBeAuthorized(to)) {
         if (isTokenValid()) {
-            const userRoles = store.getters["user/userRoles"];
+            const userRoles = await getUserRoles();
             if (routeMatchesUserRole(to, userRoles)) {
                 next();
             } else {
@@ -42,9 +51,8 @@ router.beforeEach(async (to, from, next) => {
         }
     } else {
         if (isTokenValid()) {
-            const userRoles = store.getters["user/userRoles"];
+            const userRoles = await getUserRoles();
             redirectToHomePage(userRoles, next);
-            //next({name: from.name});
         } else {
             next();
         }
