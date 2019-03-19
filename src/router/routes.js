@@ -10,6 +10,7 @@ import EditPerk from "../components/authorized/teller/perks/EditPerk";
 import ManageAchievements from "../components/authorized/teller/achievements/ManageAchievements";
 import NewAchievement from "../components/authorized/teller/achievements/NewAchievement";
 import EditAchievement from "../components/authorized/teller/achievements/EditAchievement";
+import WalletBalance from "../components/authorized/teller/wallet/WalletBalance";
 
 import {EMPLOYEE_ID, TELLER_ID} from "../utils/role-types";
 
@@ -94,11 +95,18 @@ export default [
                 component: EditAchievement,
                 meta: getMeta(true, TELLER_ID)
             },
+            // Wallet
             {
                 path: '/recover-wallet',
                 name: "recoverWallet",
                 component: RecoverWallet,
-                meta: getMeta(true, null)
+                meta: getMeta(true, TELLER_ID)
+            },
+            {
+                path: '/wallet',
+                name: "walletBalance",
+                component: WalletBalance,
+                meta: getMeta(true, TELLER_ID)
             },
         ]
     },

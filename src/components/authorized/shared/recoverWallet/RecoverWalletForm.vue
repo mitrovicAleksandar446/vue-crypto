@@ -77,7 +77,8 @@
         computed: {
             ...mapState({
                 user: state => state.user.authUser,
-                wallet: state => state.wallet.wallet
+                wallet: state => state.wallet.wallet,
+                walletStored: state => state.wallet.walletStored
             })
         },
 

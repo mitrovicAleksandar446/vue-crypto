@@ -25,20 +25,28 @@
 
         data() {
             return {
-                sidebarOptions: {
-                    "Achievements" : {
+                sidebarOptions: [
+                    {
+                        name: "Achievements",
                         href: {name: "achievements"},
-                        active: true
+                        active: false
                     },
-                    "Perks" : {
+                    {
+                        name: "Perks",
                         href: {name: "perks"},
                         active: false
                     },
-                    "Inactive users" : {
+                    {
+                        name: "Inactive users",
                         href: {name: "inactiveUsers"},
                         active: false
+                    },
+                    {
+                        name: "Wallet",
+                        href: {name: "walletBalance"},
+                        active: true
                     }
-                }
+                ]
             }
         },
 

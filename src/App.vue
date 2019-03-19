@@ -39,19 +39,17 @@
         methods: {
             ...mapActions("loader", ["activateLoader"]),
             ...mapActions("user", ["getUser"]),
-            ...mapActions("contract", ["createContract"]),
             ...mapActions("wallet", ["readWallet"]),
 
             async initApp() {
                 if (isTokenValid()) {
                     await this.getUser();
-                    await this.createContract();
-                    this.readWallet();
+                    await this.readWallet();
                 }
             }
         },
 
-        mounted() {
+        created() {
 
             this.activateLoader(true);
             this.initApp()

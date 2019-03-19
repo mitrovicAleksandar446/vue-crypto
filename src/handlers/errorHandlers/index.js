@@ -15,6 +15,7 @@ function unauthenticatedUserHandler() {
 }
 
 function notFoundHandler() {
-    router.push({name: 'login'});
+    store.dispatch('user/signOut')
+        .then(() => router.push({name: 'login'}));
 }
 

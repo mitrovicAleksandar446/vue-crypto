@@ -4,9 +4,9 @@
             options
         </p>
         <ul class="menu-list">
-            <li v-for="(option, name) in options" @click="setActive(name)" v-bind:key="name">
+            <li v-for="option in options" @click="setActive(option.name)" v-bind:key="option.name">
                 <router-link :to="option.href" v-bind:class='{"is-active": option.active}'>
-                    {{ name }}
+                    {{ option.name }}
                 </router-link>
             </li>
         </ul>
@@ -19,23 +19,33 @@
 
         props: {
             options: {
-                type: Object,
+                type: Array,
                 required: true
             }
         },
 
-        methods:{
+        methods: {
             setActive(activeName) {
-                for (const [key, option] of Object.entries(this.options)) {
-                    option.active = key === activeName;
+                for (const option of this.options) {
+                    option.active = option.name === activeName;
                 }
             }
         },
 
         mounted() {
+            let activeFound = false;
             const currentRoute = this.$route.path;
-            for (const option of Object.values(this.options)) {
+            const defaultOne = this.options.find(option => option.active);
+
+            this.options.forEach(option => {
                 option.active = currentRoute === option.href.path;
+                if (option.active) {
+                    activeFound = true;
+                }
+            });
+            if (!activeFound) {
+                defaultOne.active = true;
+                this.$router.push(defaultOne.href);
             }
         }
     }

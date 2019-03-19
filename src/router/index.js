@@ -18,7 +18,8 @@ function routeMatchesUserRole(route, roles) {
     return !route.meta.role || roles.includes(route.meta.role);
 }
 
-function redirectToHomePage(roles, next) {
+async function redirectToHomePage(next) {
+    const roles = await getUserRoles();
     if (roles.includes(TELLER_ID)) {
         next({name: 'tellerHome'});
     } else {
@@ -32,8 +33,6 @@ async function getUserRoles() {
     }
     return store.getters["user/userRoles"];
 }
-
-router.onError(() => alert("asdasd"));
 
 router.beforeEach(async (to, from, next) => {
 
@@ -51,8 +50,7 @@ router.beforeEach(async (to, from, next) => {
         }
     } else {
         if (isTokenValid()) {
-            const userRoles = await getUserRoles();
-            redirectToHomePage(userRoles, next);
+            redirectToHomePage(next);
         } else {
             next();
         }

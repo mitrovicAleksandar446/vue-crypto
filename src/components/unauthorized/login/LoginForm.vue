@@ -51,6 +51,7 @@
 <script>
     import {mapActions} from 'vuex';
     import {mapGetters} from 'vuex';
+    import {mapState} from 'vuex';
     import {TELLER_ID} from "../../../utils/role-types";
 
     export default {
@@ -66,7 +67,10 @@
         },
 
         computed: {
-            ...mapGetters('user', ['userRoles'])
+            ...mapGetters('user', ['userRoles']),
+            ...mapState({
+                authUser: state => state.user.authUser
+            })
         },
 
         methods: {
@@ -74,7 +78,6 @@
             ...mapActions('user', ['signIn', 'getUser']),
             ...mapActions('wallet', ['loadWallet']),
             ...mapActions('dialog', ['showDialog']),
-            ...mapActions('contract', ['createContract']),
             ...mapActions('loader', ['activateLoader']),
 
             validateBeforeLogin() {
@@ -93,7 +96,6 @@
                         await this.signIn(credentials);
                         this.loadWallet(credentials);
                         await this.getUser();
-                        await this.createContract();
                     } catch (err) {
                         this.activateLoader(false);
                         this.showDialog({

@@ -4,7 +4,6 @@ import userModule from './user'
 import dialogModule from './dialog'
 import walletModule from './wallet'
 import loaderModule from './loader'
-import contractModule from './contract'
 import tellerModule from './teller'
 import perkModule from './perk'
 import achievementModule from './achievement'
@@ -19,7 +18,6 @@ const store = new Vuex.Store({
         dialog: dialogModule,
         wallet: walletModule,
         loader: loaderModule,
-        contract: contractModule,
         teller: tellerModule,
         perk: perkModule,
         achievement: achievementModule
