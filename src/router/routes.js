@@ -11,6 +11,7 @@ import ManageAchievements from "../components/authorized/teller/achievements/Man
 import NewAchievement from "../components/authorized/teller/achievements/NewAchievement";
 import EditAchievement from "../components/authorized/teller/achievements/EditAchievement";
 import WalletBalance from "../components/authorized/teller/wallet/WalletBalance";
+import RewardRequests from "../components/authorized/teller/requests/RewardRequests";
 
 import {EMPLOYEE_ID, TELLER_ID} from "../utils/role-types";
 
@@ -106,6 +107,12 @@ export default [
                 path: '/wallet',
                 name: "walletBalance",
                 component: WalletBalance,
+                meta: getMeta(true, TELLER_ID)
+            },
+            {
+                path: '/reward-requests',
+                name: "rewardRequests",
+                component: RewardRequests,
                 meta: getMeta(true, TELLER_ID)
             },
         ]

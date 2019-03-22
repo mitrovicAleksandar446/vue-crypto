@@ -45,6 +45,11 @@
                         name: "Wallet",
                         href: {name: "walletBalance"},
                         active: true
+                    },
+                    {
+                        name: "Reward requests",
+                        href: {name: "rewardRequests"},
+                        active: false
                     }
                 ]
             }

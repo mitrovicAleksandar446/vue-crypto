@@ -8,7 +8,8 @@ export default {
     getAll,
     destroy,
     get,
-    update
+    update,
+    getRequests
 }
 
 function create(perk) {
@@ -31,4 +32,9 @@ function get(achievementId) {
 
 function update(achievement, achievementId) {
     return http.patch(`/achievements/${achievementId}`, achievement);
+}
+
+function getRequests(status) {
+    return http.get(`/user-achievements`, {params: {status}})
+        .then(responseTransformer);
 }

@@ -37,6 +37,7 @@ function removeToken() {
 }
 
 function filesystem(path) {
+    if (!path) return path;
     const validatedPath = path[0] === "/" ? path : `/${path}`;
     return `${API_ROOT}/filesystem${validatedPath}`;
 }
