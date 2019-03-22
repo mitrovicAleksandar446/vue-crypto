@@ -1,20 +1,15 @@
 import QXContract from './QXContract';
 import contractApi from '../../api/contract';
-import store from '../../../store';
 import {CONTRACT_GAS_PRICE} from '../../../config';
 import {ethClient} from '../../ethClient';
 
 let qxcContract = null;
 
-async function create() {
+async function create(address) {
 
     const contract = await contractApi.getContract();
-    const user = store.state.user.authUser;
-    if (!user) {
-        throw new Error("Can't create contract, user is unknown");
-    }
     const options = {
-        from: user.address,
+        from: address,
         gasPrice: CONTRACT_GAS_PRICE
     };
     const abi = JSON.parse(contract.abi);
@@ -23,9 +18,12 @@ async function create() {
     return new QXContract(qxcRawContract);
 }
 
-async function getInstance() {
-    if (qxcContract) return qxcContract;
-    else return qxcContract = await create();
+async function getInstance(address) {
+    if (qxcContract) {
+        qxcContract.contract.options.from = address;
+        return qxcContract;
+    }
+    else return qxcContract = await create(address);
 }
 
 export default {
