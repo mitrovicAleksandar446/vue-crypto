@@ -80,8 +80,8 @@
         async created() {
 
             try {
-                const contract = await qxcContract.getInstance(address);
                 const address = this.user.address;
+                const contract = await qxcContract.getInstance(address);
 
                 const results = await Promise.all([historyApi.getAll(), contract.balanceOf(address)]);
 
@@ -91,6 +91,7 @@
                 this.balance = results[1];
 
             } catch (err) {
+                console.log(err);
                 this.$toast.open({
                     message: err.response ? err.response.data.message : err.message,
                     type: "is-danger",

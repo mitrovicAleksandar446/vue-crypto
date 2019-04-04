@@ -1,6 +1,7 @@
 <template>
     <div>
         <Dialog v-if="this.dialogData" v-bind:data="this.dialogData"></Dialog>
+        <Toast v-if="this.toastData" v-bind:data="this.toastData"></Toast>
         <Loader></Loader>
         <section v-if="appLoaded">
             <router-view></router-view>
@@ -11,6 +12,7 @@
 
 <script>
     import Dialog from './components/Dialog.vue';
+    import Toast from './components/Toast.vue';
     import Loader from './components/Loader.vue';
     import {mapState} from 'vuex';
     import {mapActions} from 'vuex';
@@ -27,12 +29,14 @@
 
         components: {
             Dialog,
-            Loader
+            Loader,
+            Toast
         },
 
         computed: {
             ...mapState({
-                dialogData: state => state.dialog.data
+                dialogData: state => state.dialog.data,
+                toastData: state => state.toast.data
             })
         },
 
@@ -40,31 +44,32 @@
             ...mapActions("loader", ["activateLoader"]),
             ...mapActions("user", ["getUser"]),
             ...mapActions("wallet", ["readWallet"]),
+            ...mapActions("contract", ["getContract"]),
+            ...mapActions("toast", ["showDangerToast"]),
 
-            async initApp() {
+            initApp() {
                 if (isTokenValid()) {
-                    await this.getUser();
-                    await this.readWallet();
+                    return Promise.all([
+                        this.getUser(),
+                        this.getContract(),
+                        Promise.resolve(this.readWallet())
+                    ]);
                 }
             }
         },
 
-        created() {
+        async created() {
 
-            this.activateLoader(true);
-            this.initApp()
-                .then(() => {
-                    this.activateLoader(false);
-                    this.appLoaded = true;
-                })
-                .catch(err => {
-                    this.activateLoader(false);
-                    this.$toast.open({
-                        message: err.response ? err.response.data.message : err.message,
-                        type: 'is-danger',
-                        position: 'is-top-right'
-                    })
-                });
+            try {
+                this.activateLoader(true);
+                await this.initApp();
+                this.activateLoader(false);
+                this.appLoaded = true;
+
+            } catch (err) {
+                this.activateLoader(false);
+                this.showDangerToast(err.response ? err.response.data.message : err.message);
+            }
         }
     }
 </script>

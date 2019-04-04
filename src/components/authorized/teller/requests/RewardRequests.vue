@@ -20,19 +20,14 @@
                             </p>
                         </div>
                         <nav class="level is-mobile teller-note">
-                            <p v-if="request.teller_note">
-                                <em><u>"{{ request.teller_note }}"</u></em>
-                                <span class="icon is-large teller-note-btn" title="Click to enter edit mode">
-                                  <i class="is-small fas fa-edit" aria-hidden="true"></i>
-                                </span>
-                            </p>
+                            <teller-note v-bind:note.sync="request.teller_note" v-on:save:note="updateTellerNote(request)"></teller-note>
                         </nav>
                         <nav class="level is-mobile">
                             <div class="level-right">
-                                <a class="level-item button is-success">
+                                <a class="level-item button is-success" v-on:click="approveRequest(request)">
                                     Approve
                                 </a>
-                                <a class="level-item button is-danger">
+                                <a class="level-item button is-danger" v-on:click="rejectRequest(request)">
                                     Reject
                                 </a>
                             </div>
@@ -49,9 +44,17 @@
 
 <script>
     import achievementApi from '@/services/api/achievement/'
+    import TellerNote from './TellerNote'
+    import qxcContract from '../../../../services/eth/contract'
+    import {mapState} from 'vuex'
+    import {mapActions} from 'vuex'
 
     export default {
         name: "RewardRequests",
+
+        components: {
+            TellerNote
+        },
 
         data() {
             return {
@@ -59,9 +62,57 @@
             }
         },
 
+        computed: {
+            ...mapState({
+                user: state => state.user.authUser
+            })
+        },
+
         async created() {
             this.requests = await achievementApi.getRequests('pending');
-            console.log(this.requests);
+        },
+
+        methods: {
+
+            ...mapActions("loader", ["activateLoader"]),
+            ...mapActions("toast", ["showSuccessToast", "showDangerToast"]),
+
+            updateTellerNote(request) {
+                if (!request.teller_note) return;
+                achievementApi.updateRequest({teller_note: request.teller_note}, request.id);
+            },
+
+            async approveRequest(request) {
+
+                this.activateLoader(true);
+                const contract = await qxcContract.getInstance(this.user.address);
+
+                contract.transfer(request.address, request.value)
+                    .on("error", err => {
+                        this.activateLoader(false);
+                        this.showDangerToast(err.message);
+                    })
+                    .then(async () => {
+                        await achievementApi.updateRequest({status: 'approved'}, request.id);
+                        this.requests = this.requests.filter(req => req.id !== request.id);
+                        this.activateLoader(false);
+                        this.showSuccessToast("Request approved");
+                    })
+            },
+
+            async rejectRequest(request) {
+
+                this.activateLoader(true);
+                try {
+                    await achievementApi.updateRequest({status: 'rejected'}, request.id);
+                    this.requests = this.requests.filter(req => req.id !== request.id);
+                    this.activateLoader(false);
+                    this.showSuccessToast("Request rejected");
+                } catch (err) {
+                    this.activateLoader(false);
+                    this.showDangerToast(err.response.data.message);
+                }
+            }
         }
 
     }
@@ -70,9 +121,5 @@
 <style scoped>
     .is-large.fas {
         font-size: 2em;
-    }
-
-    .teller-note-btn {
-        cursor: pointer;
     }
 </style>

@@ -21,13 +21,10 @@
 
         mounted() {
 
-            switch (this.data.status) {
-                case 'confirm':
-                    this.$dialog.confirm(this.data);
-                    break;
-                default:
-                    this.$dialog.alert(this.data);
-                    break;
+            if (this.data.status === 'confirm') {
+                this.$dialog.confirm(this.data);
+            } else {
+                this.$dialog.alert(this.data);
             }
             this.hideDialog();
         }

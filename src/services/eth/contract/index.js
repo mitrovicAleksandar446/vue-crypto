@@ -1,20 +1,19 @@
 import QXContract from './QXContract';
-import contractApi from '../../api/contract';
 import {CONTRACT_GAS_PRICE} from '../../../config';
 import {ethClient} from '../../ethClient';
+import store from '@/store/';
 
 let qxcContract = null;
 
 async function create(address) {
 
-    const contract = await contractApi.getContract();
+    const contract = store.state.contract;
     const options = {
         from: address,
         gasPrice: CONTRACT_GAS_PRICE
     };
-    const abi = JSON.parse(contract.abi);
 
-    const qxcRawContract = new ethClient.eth.Contract(abi, contract.address, options);
+    const qxcRawContract = new ethClient.eth.Contract(contract.contractAbi, contract.contractAddress, options);
     return new QXContract(qxcRawContract);
 }
 

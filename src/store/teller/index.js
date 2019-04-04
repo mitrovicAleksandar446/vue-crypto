@@ -26,7 +26,9 @@ const actions = {
                 const inactiveUsersList = state.inactiveUsersList.filter(user => user.id !== userId);
                 commit('setInactiveUsersList', inactiveUsersList);
             });
-    }
+    },
+
+
 };
 
 export default {
