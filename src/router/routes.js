@@ -12,6 +12,8 @@ import NewAchievement from "../components/authorized/teller/achievements/NewAchi
 import EditAchievement from "../components/authorized/teller/achievements/EditAchievement";
 import WalletBalance from "../components/authorized/teller/wallet/WalletBalance";
 import RewardRequests from "../components/authorized/teller/requests/RewardRequests";
+import RedeemRequests from "../components/authorized/teller/requests/RedeemRequests";
+import Error404 from "../components/authorized/shared/Error404";
 
 import {EMPLOYEE_ID, TELLER_ID} from "../utils/role-types";
 
@@ -20,6 +22,10 @@ function getMeta(isAuthorized, role = null) {
         return {authRequired: isAuthorized, role: null};
     }
     return {authRequired: isAuthorized, role: role};
+}
+
+function getErrorMeta() {
+    return {authRequired: false, error: true};
 }
 
 export default [
@@ -115,12 +121,19 @@ export default [
                 component: RewardRequests,
                 meta: getMeta(true, TELLER_ID)
             },
+            {
+                path: '/redeem-requests',
+                name: "redeemRequests",
+                component: RedeemRequests,
+                meta: getMeta(true, TELLER_ID)
+            },
         ]
     },
-    // {
-    //     path: '*',
-    //     component: PageNotFound,
-    //     meta: { authRequired: false }
-    // }
+    {
+        path: '*',
+        name: "error404",
+        component: Error404,
+        meta: getErrorMeta()
+    }
 
 ]

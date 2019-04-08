@@ -50,6 +50,11 @@
                         name: "Reward requests",
                         href: {name: "rewardRequests"},
                         active: false
+                    },
+                    {
+                        name: "Redeem requests",
+                        href: {name: "redeemRequests"},
+                        active: false
                     }
                 ]
             }

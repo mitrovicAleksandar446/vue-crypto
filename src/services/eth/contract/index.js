@@ -7,6 +7,9 @@ let qxcContract = null;
 
 async function create(address) {
 
+    if (!store.state.contract.contractAddress)  {
+        await store.dispatch("contract/getContract");
+    }
     const contract = store.state.contract;
     const options = {
         from: address,

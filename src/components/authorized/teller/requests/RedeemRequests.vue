@@ -5,7 +5,7 @@
                 <article class="media">
                     <div class="media-left">
                         <span class="icon is-large">
-                          <i class="is-large fas fa-award" aria-hidden="true"></i>
+                          <i class="is-large fas fa-money-bill-alt" aria-hidden="true"></i>
                         </span>
                     </div>
                     <div class="media-content">
@@ -13,7 +13,7 @@
                             <p>
                                 <strong>{{ request.username }}</strong>
                                 <br>
-                                Requested a reward of <strong>{{ request.value }} QXC</strong> for {{ request.achievement.name }}
+                                Requested a {{ request.perk.name }} for <strong>{{ request.value }} QXC</strong>
                             </p>
                             <p v-if="request.employee_note">
                                 <em>"{{ request.employee_note }}"</em>
@@ -43,14 +43,14 @@
 </template>
 
 <script>
-    import achievementApi from '@/services/api/achievement/'
     import TellerNote from './TellerNote'
-    import qxcContract from '@/services/eth/contract/'
     import {mapState} from 'vuex'
     import {mapActions} from 'vuex'
+    import perkApi from '@/services/api/perk/'
+    import qxcContract from '@/services/eth/contract/'
 
     export default {
-        name: "RewardRequests",
+        name: "RedeemRequests",
 
         components: {
             TellerNote
@@ -64,36 +64,35 @@
 
         computed: {
             ...mapState({
-                user: state => state.user.authUser
+                tellerAddress: state => state.contract.tellerAddress
             })
         },
 
         async created() {
-            this.requests = await achievementApi.getRequests('pending');
+            this.requests = await perkApi.getRequests('pending');
         },
 
         methods: {
-
             ...mapActions("loader", ["activateLoader"]),
             ...mapActions("toast", ["showSuccessToast", "showDangerToast"]),
 
             updateTellerNote(request) {
                 if (!request.teller_note) return;
-                achievementApi.updateRequest({teller_note: request.teller_note}, request.id);
+                perkApi.updateRequest({teller_note: request.teller_note}, request.id);
             },
 
             async approveRequest(request) {
 
                 this.activateLoader(true);
-                const contract = await qxcContract.getInstance(this.user.address);
+                const contract = await qxcContract.getInstance(request.address);
 
-                contract.transfer(request.address, request.value)
+                contract.transfer(this.tellerAddress, request.value)
                     .on("error", err => {
                         this.activateLoader(false);
                         this.showDangerToast(err.message);
                     })
                     .then(async () => {
-                        await achievementApi.updateRequest({status: 'approved'}, request.id);
+                        await perkApi.updateRequest({status: 'approved'}, request.id);
                         this.requests = this.requests.filter(req => req.id !== request.id);
                         this.activateLoader(false);
                         this.showSuccessToast("Request approved");
@@ -104,7 +103,7 @@
 
                 this.activateLoader(true);
                 try {
-                    await achievementApi.updateRequest({status: 'rejected'}, request.id);
+                    await perkApi.updateRequest({status: 'rejected'}, request.id);
                     this.requests = this.requests.filter(req => req.id !== request.id);
                     this.activateLoader(false);
                     this.showSuccessToast("Request rejected");
@@ -114,7 +113,6 @@
                 }
             }
         }
-
     }
 </script>
 

@@ -8,7 +8,9 @@ export default {
     getAll,
     destroy,
     get,
-    update
+    update,
+    getRequests,
+    updateRequest
 }
 
 function create(perk) {
@@ -31,4 +33,13 @@ function get(perkId) {
 
 function update(perk, perkId) {
     return http.post(`/perks/${perkId}`, perk);
+}
+
+function getRequests(status) {
+    return http.get(`/user-perks`, {params: {status}})
+        .then(responseTransformer);
+}
+
+function updateRequest(request, id) {
+    return http.patch(`/user-perks/${id}`, request);
 }

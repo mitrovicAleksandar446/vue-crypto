@@ -49,7 +49,7 @@ router.beforeEach(async (to, from, next) => {
             store.dispatch('user/signOut');
         }
     } else {
-        if (isTokenValid()) {
+        if (isTokenValid() && !to.meta.error) {
             redirectToHomePage(next);
         } else {
             next();

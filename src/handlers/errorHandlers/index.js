@@ -11,11 +11,9 @@ export {
 function unauthenticatedUserHandler() {
     store.dispatch('user/signOut')
         .then(() => router.push({name: 'login'}));
-
 }
 
 function notFoundHandler() {
-    store.dispatch('user/signOut')
-        .then(() => router.push({name: 'login'}));
+    router.push({name: 'error404'});
 }
 
