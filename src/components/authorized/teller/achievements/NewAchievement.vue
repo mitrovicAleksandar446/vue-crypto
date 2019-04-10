@@ -53,6 +53,7 @@
 
 <script>
     import {mapActions} from 'vuex';
+    import achievementApi from '@/services/api/achievement/';
 
     export default {
         name: "NewAchievement",
@@ -68,7 +69,7 @@
         },
 
         methods: {
-            ...mapActions('achievement', ['createNewAchievement']),
+            ...mapActions('toast', ['showDangerToast', 'showSuccessToast']),
 
             validateBeforeCreate() {
                 this.$validator.validateAll().then(this.create);
@@ -76,22 +77,12 @@
 
             create(valid) {
                 if (valid) {
-                    this.createNewAchievement(this.achievement)
+                    achievementApi.create(this.achievement)
                         .then(() => {
-                            this.$toast.open({
-                                message: 'Achievement created',
-                                type: 'is-success',
-                                position: 'is-top-right'
-                            });
+                            this.showSuccessToast('Achievement created');
                             setTimeout(() => this.$router.push({name: 'achievements'}), 1000);
                         })
-                        .catch(err => {
-                            this.$toast.open({
-                                message: err.response.data.message,
-                                type: 'is-danger',
-                                position: 'is-top-right'
-                            });
-                        });
+                        .catch(err => this.showDangerToast(err.response.data.message));
                 }
             }
         }

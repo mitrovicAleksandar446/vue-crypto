@@ -32,34 +32,31 @@
 
 <script>
     import {mapActions} from 'vuex'
-    import {mapState} from 'vuex'
+    import userApi from '@/services/api/user/'
 
     export default {
         name: "InactiveUsers",
 
-        computed: {
-            ...mapState({
-                users: state => state.teller.inactiveUsersList
-            })
+        data() {
+            return {
+                users: []
+            }
         },
 
         methods: {
-            ...mapActions('teller', ['getInactiveUsersList', 'activateUser']),
+            ...mapActions('toast', ['showSuccessToast']),
 
             activateInactiveUser(userId) {
-                this.activateUser(userId)
+                userApi.activateUser(userId)
                     .then(() => {
-                        this.$toast.open({
-                            message: 'User activated',
-                            type: 'is-success',
-                            position: 'is-top-right'
-                        });
+                        this.users = this.users.filter(user => user.id !== userId);
+                        this.showSuccessToast("User activated");
                     });
             }
         },
 
-        created() {
-            this.getInactiveUsersList();
+        async created() {
+            this.users = await userApi.getInactiveUsers();
         }
     }
 </script>

@@ -29,20 +29,20 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex';
     import {mapActions} from 'vuex';
+    import achievementApi from '@/services/api/achievement/';
 
     export default {
         name: "ManageAchievements",
 
-        computed: {
-            ...mapState({
-                achievements: state => state.achievement.achievementsList
-            })
+        data() {
+            return {
+                achievements: []
+            }
         },
 
         methods: {
-            ...mapActions('achievement', ['getAllAchievements', 'destroyAchievement']),
+            ...mapActions('toast', ['showDangerToast', 'showSuccessToast']),
             ...mapActions('dialog', ['showDialog']),
 
             openDeleteDialog(achievementId) {
@@ -51,25 +51,17 @@
                     message: "Are you sure you want to delete this achievement ?",
                     cancelText: 'No',
                     confirmText: 'Yes',
-                    onConfirm: () => this.destroy(achievementId)
+                    onConfirm: () => this.destroyAchievement(achievementId)
                 });
             },
 
-            destroy(achievementId) {
-                this.destroyAchievement(achievementId)
+            destroyAchievement(achievementId) {
+                achievementApi.destroy(achievementId)
                     .then(() => {
-                        this.$toast.open({
-                            message: 'Achievement deleted',
-                            type: 'is-success',
-                            position: 'is-top-right'
-                        });
-                    }).catch(err => {
-                    this.$toast.open({
-                        message: err.response.data.message,
-                        type: 'is-danger',
-                        position: 'is-top-right'
-                    });
-                });
+                        this.achievements = this.achievements.filter(achievement => achievement.id !== achievementId);
+                        this.showSuccessToast('Achievement deleted');
+                    })
+                    .catch(err => this.showDangerToast(err.response.data.message));
             },
 
             openEdit(achievementId) {
@@ -77,8 +69,8 @@
             }
         },
 
-        created() {
-            this.getAllAchievements();
+        async created() {
+            this.achievements = await achievementApi.getAll();
         }
     }
 </script>

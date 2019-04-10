@@ -12,7 +12,7 @@
                          :type="{'is-danger': errors.has('name')}"
                          :message="errors.first('name')">
                     <b-input type="text"
-                             v-model="name"
+                             v-model="achievement.name"
                              v-validate="'required|min:3'"
                              name="name"
                              maxlength="30"
@@ -23,7 +23,7 @@
                 <b-field label="Description"
                          maxlength="200">
                     <b-input type="textarea"
-                             v-model="description"
+                             v-model="achievement.description"
                              name="description"
                              maxlength="200"
                              placeholder="Name here...">
@@ -34,7 +34,7 @@
                          :type="{'is-danger': errors.has('value')}"
                          :message="errors.first('value')">
                     <b-input type="number"
-                             v-model="value"
+                             v-model="achievement.value"
                              v-validate="'required|numeric|min_value:1'"
                              name="value"
                              placeholder="Value here...">
@@ -52,56 +52,25 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex';
     import {mapActions} from 'vuex';
+    import achievementApi from '@/services/api/achievement/';
 
     export default {
         name: "EditAchievement",
 
         data() {
             return {
-                achievementId: this.$route.params.id
+                achievementId: this.$route.params.id,
+                achievement: null
             }
         },
 
-        computed: {
-            ...mapState({
-                achievement: state => state.achievement.achievement
-            }),
-
-            name: {
-                get() {
-                    return this.achievement.name;
-                },
-
-                set(name) {
-                    this.$store.commit('achievement/setAchievement', {name});
-                }
-            },
-
-            description: {
-                get() {
-                    return this.achievement.description;
-                },
-
-                set(description) {
-                    this.$store.commit('achievement/setAchievement', {description});
-                }
-            },
-
-            value: {
-                get() {
-                    return this.achievement.value;
-                },
-
-                set(value) {
-                    this.$store.commit('achievement/setAchievement', {value});
-                }
-            }
+        async created() {
+            this.achievement = await achievementApi.get(this.achievementId);
         },
 
         methods: {
-            ...mapActions('achievement', ['getAchievement', 'updateAchievement']),
+            ...mapActions('toast', ['showDangerToast', 'showSuccessToast']),
 
             validateBeforeUpdate() {
                 this.$validator.validateAll().then(this.update);
@@ -110,28 +79,14 @@
             update(valid) {
 
                 if (valid) {
-                    this.updateAchievement({payload: this.achievement, achievementId: this.achievementId})
+                    achievementApi.update(this.achievement, this.achievementId)
                         .then(() => {
-                            this.$toast.open({
-                                message: 'Achievement updated',
-                                type: 'is-success',
-                                position: 'is-top-right'
-                            });
+                            this.showSuccessToast('Achievement updated');
                             setTimeout(() => this.$router.push({name: 'achievements'}), 1000);
                         })
-                        .catch(err => {
-                            this.$toast.open({
-                                message: err.response.data.message,
-                                type: 'is-danger',
-                                position: 'is-top-right'
-                            });
-                        });
+                        .catch(err => this.showDangerToast(err.response.data.message));
                 }
             }
-        },
-
-        created() {
-            this.getAchievement(this.achievementId);
         }
     }
 </script>

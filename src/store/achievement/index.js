@@ -1,7 +1,6 @@
 'use strict';
 
 import achievementApi from './../../services/api/achievement';
-import {EventBus} from "../../services/eventBus";
 
 const state = {
     achievementsList: [],
