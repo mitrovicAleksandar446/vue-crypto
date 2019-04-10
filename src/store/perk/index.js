@@ -35,8 +35,7 @@ const actions = {
             .then(perk => {
                 perk.image = filesystem(perk.image);
                 commit('setPerk', perk)
-            })
-            .catch(err => EventBus.$emit('i-got-404-error', err));
+            });
     },
 
     createNewPerk(context, perk) {

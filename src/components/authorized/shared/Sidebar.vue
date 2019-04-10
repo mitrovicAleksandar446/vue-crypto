@@ -33,20 +33,10 @@
         },
 
         mounted() {
-            let activeFound = false;
             const currentRoute = this.$route.path;
-            const defaultOne = this.options.find(option => option.active);
-
             this.options.forEach(option => {
                 option.active = currentRoute === option.href.path;
-                if (option.active) {
-                    activeFound = true;
-                }
             });
-            if (!activeFound) {
-                defaultOne.active = true;
-                this.$router.push(defaultOne.href);
-            }
         }
     }
 </script>

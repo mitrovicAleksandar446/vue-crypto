@@ -32,8 +32,7 @@ const actions = {
         return achievementApi.get(perkId)
             .then(achievement => {
                 commit('setAchievement', achievement)
-            })
-            .catch(err => EventBus.$emit('i-got-404-error', err));
+            });
     },
 
     createNewAchievement(context, achievement) {

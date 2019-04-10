@@ -11,9 +11,10 @@
                     <p class="title">{{ perk.name }}</p>
                     <p class="subtitle tag is-buefy">{{ perk.value }} QXC</p>
                     <p class="subtitle">{{ perk.description }}</p>
-                    <figure class="image is-4by3">
-                        <img :src="perk.image" alt="perk-image"/>
+                    <figure class="image">
+                        <img :src="perk.image" alt="perk-image" />
                     </figure>
+
                     <article class="tile-footer tile is-child notification is-primary">
                         <a class="button is-buefy" @click="openDeleteDialog(perk.id)">
                             Delete
@@ -108,5 +109,28 @@
     .tile-footer > a {
         margin-left: 5px;
         margin-top: 5px;
+    }
+
+    .image {
+        overflow: hidden;
+        position: relative;
+        height: 200px;
+        margin: auto;
+    }
+
+    .tile.is-child {
+        width:100% !important;
+    }
+
+    img {
+        display: block;
+        position: absolute;
+        left: -1000%;
+        right: -1000%;
+        top: -1000%;
+        bottom: -1000%;
+        margin: auto;
+        height: auto;
+        width: 100%;
     }
 </style>

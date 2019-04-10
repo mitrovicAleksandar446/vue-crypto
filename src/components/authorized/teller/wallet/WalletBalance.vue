@@ -20,19 +20,28 @@
                 </div>
             </div>
         </section>
+        <div class="is-divider" data-content="history"></div>
         <section>
             <div v-if="rewardedHistory.length > 0" class="has-text-centered">
-                <div>
-                    <h3 class="title">
-                        History
-                    </h3>
-                </div>
-                <div class="history-content">
-                    <ul class="content">
-                        <li v-for="transaction in rewardedHistory" v-bind:key="transaction.id">
-                            <b>{{ transaction.created_at }}</b> Rewarded <b>{{ transaction.value }} QXC</b> to {{ transaction.username }} for {{ transaction.achievement.name }}
-                        </li>
-                    </ul>
+                <div class="timeline is-centered">
+                    <header class="timeline-header">
+                        <span class="tag is-medium is-primary">End</span>
+                    </header>
+                    <div class="timeline-item" v-for="transaction in rewardedHistory" v-bind:key="transaction.id">
+<!--                        <header v-if="getMonth(new Date(transaction.created_at)) !== getMonth(new Date())" class="timeline-header">-->
+<!--                            <span class="tag is-primary">{{ getMonth(new Date(transaction.created_at)) }}</span>-->
+<!--                        </header>-->
+                        <div class="timeline-marker is-icon is-warning">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <p class="heading">{{ new Date(transaction.created_at).toDateString() }}</p>
+                            <p>Rewarded <b>{{ transaction.value }} QXC</b> to {{ transaction.username }} for {{ transaction.achievement.name }}</p>
+                        </div>
+                    </div>
+                    <div class="timeline-header">
+                        <span class="tag is-medium is-primary">Start</span>
+                    </div>
                 </div>
             </div>
             <span v-else class="tag is-warning is-large">
@@ -91,7 +100,6 @@
                 this.balance = results[1];
 
             } catch (err) {
-                console.log(err);
                 this.$toast.open({
                     message: err.response ? err.response.data.message : err.message,
                     type: "is-danger",
@@ -107,7 +115,29 @@
         color: $buefy-purple;
     }
 
-    .history-content {
+    .timeline {
         margin-top:20px;
+    }
+
+    .is-divider {
+        display: block;
+        position: relative;
+        border-top: .1rem solid #dbdbdb;
+        height: .1rem;
+        margin: 2rem 0;
+        text-align: center;
+    }
+
+    .is-divider[data-content]::after, .is-divider-vertical[data-content]::after {
+        background: $html-background;
+        color: #b5b5b5;
+        content: attr(data-content);
+        display: inline-block;
+        font-size: 1rem;
+        padding: .4rem .8rem;
+        -webkit-transform: translateY(-1.1rem);
+        -ms-transform: translateY(-1.1rem);
+        transform: translateY(-1.1rem);
+        text-align: center;
     }
 </style>

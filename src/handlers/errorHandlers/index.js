@@ -5,7 +5,8 @@ import router from './../../router'
 
 export {
     unauthenticatedUserHandler,
-    notFoundHandler
+    notFoundHandler,
+    serverErrorHandler
 }
 
 function unauthenticatedUserHandler() {
@@ -15,5 +16,9 @@ function unauthenticatedUserHandler() {
 
 function notFoundHandler() {
     router.push({name: 'error404'});
+}
+
+function serverErrorHandler() {
+    router.push({name: 'error500'});
 }
 

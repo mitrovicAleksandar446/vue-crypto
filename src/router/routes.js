@@ -13,7 +13,8 @@ import EditAchievement from "../components/authorized/teller/achievements/EditAc
 import WalletBalance from "../components/authorized/teller/wallet/WalletBalance";
 import RewardRequests from "../components/authorized/teller/requests/RewardRequests";
 import RedeemRequests from "../components/authorized/teller/requests/RedeemRequests";
-import Error404 from "../components/authorized/shared/Error404";
+import Error404 from "../components/authorized/shared/errors/Error404";
+import Error500 from "../components/authorized/shared/errors/Error500";
 
 import {EMPLOYEE_ID, TELLER_ID} from "../utils/role-types";
 
@@ -55,6 +56,7 @@ export default [
     {
         path: '/teller',
         name: "tellerHome",
+        redirect: { name: 'walletBalance' },
         component: TellerHome,
         meta: getMeta(true, TELLER_ID),
         children: [
@@ -134,6 +136,11 @@ export default [
         name: "error404",
         component: Error404,
         meta: getErrorMeta()
+    },
+    {
+        path: '*',
+        name: "error500",
+        component: Error500,
+        meta: getErrorMeta()
     }
-
 ]

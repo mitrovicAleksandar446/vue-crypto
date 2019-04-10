@@ -6,5 +6,8 @@ module.exports = {
                 data: '@import "@/assets/scss/global/variables.scss";'
             }
         }
-    }
+    },
+    devServer: {
+        port: 3000
+    },
 };

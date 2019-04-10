@@ -4,7 +4,9 @@
         <Toast v-if="this.toastData" v-bind:data="this.toastData"></Toast>
         <Loader></Loader>
         <section v-if="appLoaded">
-            <router-view></router-view>
+            <transition name="fade" mode="out-in">
+                <router-view></router-view>
+            </transition>
         </section>
     </div>
 </template>
@@ -17,6 +19,7 @@
     import {mapState} from 'vuex';
     import {mapActions} from 'vuex';
     import {isTokenValid} from "./utils/helpers";
+    import {EventBus} from './services/eventBus'
 
     export default {
         name: 'app',
@@ -64,11 +67,14 @@
                 this.activateLoader(true);
                 await this.initApp();
                 this.activateLoader(false);
-                this.appLoaded = true;
 
             } catch (err) {
                 this.activateLoader(false);
                 this.showDangerToast(err.response ? err.response.data.message : err.message);
+                EventBus.$emit('i-got-500-error', err);
+
+            } finally {
+                this.appLoaded = true;
             }
         }
     }
@@ -79,8 +85,8 @@
 
     body,
     html {
-        padding: 0px;
-        margin: 0px;
+        padding: 0;
+        margin: 0;
         overflow-y: auto;
         background: $html-background;
     }

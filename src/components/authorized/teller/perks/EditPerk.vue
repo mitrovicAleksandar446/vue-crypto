@@ -31,7 +31,7 @@
                     </b-input>
                 </b-field>
                 <b-field label="Image">
-                    <figure class="image is-4by3">
+                    <figure class="image">
                         <img :src="image" alt="perk-image"/>
                     </figure>
                 </b-field>
@@ -134,6 +134,7 @@
 
         methods: {
             ...mapActions('perk', ['getPerk', 'updatePerk']),
+            ...mapActions('toast', ['showDangerToast', 'showSuccessToast']),
 
             validateBeforeUpdate() {
                 this.$validator.validateAll().then(this.update);
@@ -151,19 +152,11 @@
 
                     this.updatePerk({payload: payload, perkId: this.perkId})
                         .then(() => {
-                            this.$toast.open({
-                                message: 'Perk updated',
-                                type: 'is-success',
-                                position: 'is-top-right'
-                            });
+                            this.showSuccessToast("Perk updated");
                             setTimeout(() => this.$router.push({name: 'perks'}), 1000);
                         })
                         .catch(err => {
-                            this.$toast.open({
-                                message: err.response.data.message,
-                                type: 'is-danger',
-                                position: 'is-top-right'
-                            });
+                            this.showDangerToast(err.response.data.message);
                         });
                 }
             }
@@ -175,9 +168,17 @@
     }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
     .form-wrapper {
         margin-top: 30px;
         max-width: 500px;
+    }
+
+    img {
+        width: 300px;
+        height: auto;
+        border-radius: 6px;
+        box-shadow: 3px 2px 3px rgba(#000, 0.1), 0 0 0 1px rgba(#000, 0.1);
+        border: 3px solid $buefy-purple;
     }
 </style>

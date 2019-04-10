@@ -5,10 +5,11 @@ import Buefy from 'buefy';
 import router from './router';
 import store from './store';
 import {EventBus} from "./services/eventBus";
-import {unauthenticatedUserHandler, notFoundHandler} from './handlers/errorHandlers/';
+import {unauthenticatedUserHandler, notFoundHandler, serverErrorHandler} from './handlers/errorHandlers/';
 import {sessionStoragePersistenceHandler, triggerSessionStoragePersistence} from './handlers/sessionStoragePersistenceHandler/';
 
 import '@fortawesome/fontawesome-free/css/all.css';
+import 'bulma-timeline/dist/css/bulma-timeline.sass';
 
 Vue.config.productionTip = false;
 
@@ -20,6 +21,7 @@ triggerSessionStoragePersistence();
 window.addEventListener("storage", sessionStoragePersistenceHandler);
 EventBus.$on('i-got-401-error', unauthenticatedUserHandler);
 EventBus.$on('i-got-404-error', notFoundHandler);
+EventBus.$on('i-got-500-error', serverErrorHandler);
 
 new Vue({
     router,

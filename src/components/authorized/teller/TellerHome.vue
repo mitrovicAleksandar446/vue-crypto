@@ -8,7 +8,9 @@
                         <Sidebar v-bind:options.sync="sidebarOptions"></Sidebar>
                     </div>
                     <div class="column is-10">
-                        <router-view></router-view>
+                        <transition name="fade" mode="out-in">
+                            <router-view></router-view>
+                        </transition>
                     </div>
                 </div>
             </div>
@@ -44,7 +46,7 @@
                     {
                         name: "Wallet",
                         href: {name: "walletBalance"},
-                        active: true
+                        active: false
                     },
                     {
                         name: "Reward requests",
