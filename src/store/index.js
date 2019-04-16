@@ -5,7 +5,6 @@ import dialogModule from './dialog'
 import toastModule from './toast'
 import walletModule from './wallet'
 import loaderModule from './loader'
-import perkModule from './perk'
 import contractModule from './contract'
 
 Vue.use(Vuex);
@@ -19,7 +18,6 @@ const store = new Vuex.Store({
         toast: toastModule,
         wallet: walletModule,
         loader: loaderModule,
-        perk: perkModule,
         contract: contractModule,
     }
 });

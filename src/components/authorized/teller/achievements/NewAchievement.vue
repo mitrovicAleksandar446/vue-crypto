@@ -30,7 +30,7 @@
 
                     </b-input>
                 </b-field>
-                <b-field label="Value"
+                <b-field label="Value (QXC)"
                          :type="{'is-danger': errors.has('value')}"
                          :message="errors.first('value')">
                     <b-input type="number"
@@ -92,6 +92,5 @@
 <style scoped>
     .form-wrapper {
         margin-top:30px;
-        max-width:500px;
     }
 </style>

@@ -22,7 +22,7 @@
                 </article>
             </div>
         </div>
-        <span v-else class="tag is-warning is-large">
+        <span v-else class="tag is-warning is-large no-achievements">
             No achievements ...
         </span>
     </section>
@@ -97,5 +97,9 @@
     .tile-footer > a {
         margin-left: 5px;
         margin-top: 5px;
+    }
+
+    .no-achievements {
+        margin-top: 10px;
     }
 </style>

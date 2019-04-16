@@ -8,7 +8,9 @@
                         <Sidebar v-bind:options.sync="sidebarOptions"></Sidebar>
                     </div>
                     <div class="column is-10">
-                        <h1>Employee</h1>
+                        <transition name="fade" mode="out-in">
+                            <router-view></router-view>
+                        </transition>
                     </div>
                 </div>
             </div>
@@ -25,20 +27,13 @@
 
         data() {
             return {
-                sidebarOptions: {
-                    "Link1" : {
-                        href: "wwww.google.com",
-                        active: true
-                    },
-                    "Link2" : {
-                        href: "wwww.yahoo.com",
-                        active: false
-                    },
-                    "Link3" : {
-                        href: "wwww.bing.com",
+                sidebarOptions: [
+                    {
+                        name: "Wallet",
+                        href: {name: "walletBalance"},
                         active: false
                     }
-                }
+                ]
             }
         },
 

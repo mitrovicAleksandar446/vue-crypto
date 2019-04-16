@@ -12,7 +12,7 @@
                          :type="{'is-danger': errors.has('name')}"
                          :message="errors.first('name')">
                     <b-input type="text"
-                             v-model="name"
+                             v-model="perk.name"
                              v-validate="'required|min:3'"
                              name="name"
                              maxlength="30"
@@ -23,7 +23,7 @@
                 <b-field label="Description"
                          maxlength="200">
                     <b-input type="textarea"
-                             v-model="description"
+                             v-model="perk.description"
                              name="description"
                              maxlength="200"
                              placeholder="Name here...">
@@ -32,7 +32,7 @@
                 </b-field>
                 <b-field label="Image">
                     <figure class="image">
-                        <img :src="image" alt="perk-image"/>
+                        <img :src="perk.image" alt="perk-image"/>
                     </figure>
                 </b-field>
                 <b-field class="file"
@@ -55,7 +55,7 @@
                          :type="{'is-danger': errors.has('value')}"
                          :message="errors.first('value')">
                     <b-input type="number"
-                             v-model="value"
+                             v-model="perk.value"
                              v-validate="'required|numeric|min_value:1'"
                              name="value"
                              placeholder="Value here...">
@@ -74,7 +74,8 @@
 
 <script>
     import {mapActions} from 'vuex'
-    import {mapState} from 'vuex'
+    import perkApi from '@/services/api/perk/'
+    import {filesystem} from "@/utils/helpers/";
 
     export default {
         name: "EditPerk",
@@ -82,58 +83,17 @@
         data() {
             return {
                 file: null,
-                perkId: this.$route.params.id
-            }
-        },
-
-        computed: {
-            ...mapState({
-                perk: state => state.perk.perk
-            }),
-
-            name: {
-                get() {
-                    return this.perk.name;
-                },
-
-                set(name) {
-                    this.$store.commit('perk/setPerk', {name});
-                }
-            },
-
-            description: {
-                get() {
-                    return this.perk.description;
-                },
-
-                set(description) {
-                    this.$store.commit('perk/setPerk', {description});
-                }
-            },
-
-            value: {
-                get() {
-                    return this.perk.value;
-                },
-
-                set(value) {
-                    this.$store.commit('perk/setPerk', {value});
-                }
-            },
-
-            image: {
-                get() {
-                    return this.perk.image;
-                },
-
-                set(image) {
-                    this.$store.commit('perk/setPerk', {image});
+                perkId: this.$route.params.id,
+                perk: {
+                    name: null,
+                    description: null,
+                    image: null,
+                    value: 1
                 }
             }
         },
 
         methods: {
-            ...mapActions('perk', ['getPerk', 'updatePerk']),
             ...mapActions('toast', ['showDangerToast', 'showSuccessToast']),
 
             validateBeforeUpdate() {
@@ -141,29 +101,29 @@
             },
 
             update(valid) {
+
                 if (valid) {
                     const payload = new FormData;
-                    payload.append("name", this.name);
-                    payload.append("description", this.description);
-                    payload.append("value", this.value);
+                    payload.append("name", this.perk.name);
+                    payload.append("description", this.perk.description);
+                    payload.append("value", this.perk.value);
                     if (this.file) {
                         payload.append("image", this.file);
                     }
 
-                    this.updatePerk({payload: payload, perkId: this.perkId})
+                    perkApi.update(payload,  this.perkId)
                         .then(() => {
                             this.showSuccessToast("Perk updated");
                             setTimeout(() => this.$router.push({name: 'perks'}), 1000);
                         })
-                        .catch(err => {
-                            this.showDangerToast(err.response.data.message);
-                        });
+                        .catch(err => this.showDangerToast(err.response.data.message));
                 }
             }
         },
 
-        created() {
-            this.getPerk(this.perkId);
+        async created() {
+            this.perk = await perkApi.get(this.perkId);
+            this.perk.image = filesystem(this.perk.image);
         }
     }
 </script>
@@ -171,7 +131,6 @@
 <style scoped lang="scss">
     .form-wrapper {
         margin-top: 30px;
-        max-width: 500px;
     }
 
     img {

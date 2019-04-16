@@ -8,7 +8,7 @@
         <div v-if="perks.length > 0" class="tile is-ancestor columns is-multiline">
             <div v-for="perk in perks" class="tile is-parent column is-4" :key="perk.id">
                 <article class="tile is-child box">
-                    <p class="title">{{ perk.name }}</p>
+                    <p class="title">{{ perk.name}}</p>
                     <p class="subtitle tag is-buefy">{{ perk.value }} QXC</p>
                     <p class="subtitle">{{ perk.description }}</p>
                     <figure class="image">
@@ -26,7 +26,7 @@
                 </article>
             </div>
         </div>
-        <span v-else class="tag is-warning is-large">
+        <span v-else class="tag is-warning is-large no-perks">
             No perks ...
         </span>
     </section>
@@ -34,19 +34,20 @@
 
 <script>
     import {mapActions} from 'vuex'
-    import {mapState} from 'vuex'
+    import perkApi from '@/services/api/perk/'
+    import {filesystem} from "@/utils/helpers/";
 
     export default {
         name: "ManagePerks",
 
-        computed: {
-            ...mapState({
-                perks: state => state.perk.perksList
-            })
+        data() {
+            return {
+                perks: []
+            }
         },
 
         methods: {
-            ...mapActions('perk', ['getAllPerks', 'destroyPerk']),
+            ...mapActions('toast', ['showSuccessToast', 'showDangerToast']),
             ...mapActions('dialog', ['showDialog']),
 
             openDeleteDialog(perkId) {
@@ -55,25 +56,17 @@
                     message: "Are you sure you want to delete this perk ?",
                     cancelText: 'No',
                     confirmText: 'Yes',
-                    onConfirm: () => this.destroy(perkId)
+                    onConfirm: () => this.destroyPerk(perkId)
                 });
             },
 
-            destroy(perkId) {
-                this.destroyPerk(perkId)
+            destroyPerk(perkId) {
+                perkApi.destroy(perkId)
                     .then(() => {
-                        this.$toast.open({
-                            message: 'Perk deleted',
-                            type: 'is-success',
-                            position: 'is-top-right'
-                        });
-                    }).catch(err => {
-                        this.$toast.open({
-                            message: err.response.data.message,
-                            type: 'is-danger',
-                            position: 'is-top-right'
-                        });
-                });
+                        this.perks = this.perks.filter(perk => perk.id !== perkId);
+                        this.showSuccessToast('Perk deleted');
+                    })
+                    .catch(err => this.showDangerToast(err.response.data.message));
             },
 
             openEdit(perkId) {
@@ -81,8 +74,10 @@
             }
         },
 
-        created() {
-            this.getAllPerks();
+        async created() {
+            const perks = await perkApi.getAll();
+            perks.forEach(perk => perk.image = filesystem(perk.image));
+            this.perks = perks;
         }
     }
 </script>
@@ -132,5 +127,9 @@
         margin: auto;
         height: auto;
         width: 100%;
+    }
+
+    .no-perks {
+        margin-top: 10px;
     }
 </style>

@@ -47,7 +47,7 @@
                         {{ perk.image.name }}
                     </span>
                 </b-field>
-                <b-field label="Value"
+                <b-field label="Value (QXC)"
                          :type="{'is-danger': errors.has('value')}"
                          :message="errors.first('value')">
                     <b-input type="number"
@@ -70,6 +70,7 @@
 
 <script>
     import {mapActions} from 'vuex';
+    import perkApi from '@/services/api/perk/';
 
     export default {
         name: "NewPerk",
@@ -87,7 +88,7 @@
 
         methods: {
 
-            ...mapActions('perk', ['createNewPerk']),
+            ...mapActions('toast', ['showSuccessToast', 'showDangerToast']),
 
             validateBeforeCreate() {
                 this.$validator.validateAll().then(this.create);
@@ -104,22 +105,12 @@
                     payload.append("image", this.perk.image);
                     payload.append("value", this.perk.value);
 
-                    this.createNewPerk(payload)
+                    perkApi.create(payload)
                         .then(() => {
-                            this.$toast.open({
-                                message: 'Perk created',
-                                type: 'is-success',
-                                position: 'is-top-right'
-                            });
+                            this.showSuccessToast('Perk created');
                             setTimeout(() => this.$router.push({name: 'perks'}), 1000);
                         })
-                        .catch(err => {
-                            this.$toast.open({
-                                message: err.response.data.message,
-                                type: 'is-danger',
-                                position: 'is-top-right'
-                            });
-                        });
+                        .catch(err => this.showDangerToast(err.response.data.message));
                 }
             }
         }
@@ -129,10 +120,9 @@
 <style scoped>
     .form-wrapper {
         margin-top:30px;
-        max-width:500px;
     }
 
     .upload {
-        margin-right:10px;
+        margin-right: 10px;
     }
 </style>

@@ -50,8 +50,17 @@ export default [
     {
         path: '/employee',
         name: "employeeHome",
+        redirect: { name: 'walletBalance' },
         component: EmployeeHome,
-        meta: getMeta(true, EMPLOYEE_ID)
+        meta: getMeta(true, EMPLOYEE_ID),
+        children: [
+            {
+                path: '/recover-wallet',
+                name: "recoverWallet",
+                component: RecoverWallet,
+                meta: getMeta(true, EMPLOYEE_ID)
+            }
+        ]
     },
     {
         path: '/teller',
