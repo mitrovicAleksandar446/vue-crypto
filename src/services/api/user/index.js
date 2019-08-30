@@ -10,7 +10,9 @@ export default {
     signOut,
     getUser,
     getInactiveUsers,
-    activateUser
+    getUsers,
+    activateUser,
+    deactivateUser
 }
 
 function signUp(user) {
@@ -42,6 +44,15 @@ function getInactiveUsers() {
         .then(responseTransformer);
 }
 
+function getUsers() {
+    return http.get(`/users`)
+        .then(responseTransformer);
+}
+
 function activateUser(id) {
     return http.patch(`/users/${id}`, {active: true});
+}
+
+function deactivateUser(id) {
+    return http.patch(`/users/${id}`, {active: false});
 }

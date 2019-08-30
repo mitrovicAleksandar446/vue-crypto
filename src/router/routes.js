@@ -4,6 +4,7 @@ import Login from "../components/unauthorized/login/LoginForm";
 import RecoverWallet from "../components/authorized/shared/recoverWallet/RecoverWalletForm";
 import Register from "../components/unauthorized/register/RegisterForm";
 import InactiveUsers from "../components/authorized/teller/users/InactiveUsers";
+import Users from "../components/authorized/teller/users/Users";
 import ManagePerks from "../components/authorized/teller/perks/ManagePerks";
 import NewPerk from "../components/authorized/teller/perks/NewPerk";
 import EditPerk from "../components/authorized/teller/perks/EditPerk";
@@ -69,6 +70,12 @@ export default [
         component: TellerHome,
         meta: getMeta(true, TELLER_ID),
         children: [
+            {
+                path: '/users',
+                name: "users",
+                component: Users,
+                meta: getMeta(true, TELLER_ID)
+            },
             {
                 path: '/inactive-users',
                 name: "inactiveUsers",

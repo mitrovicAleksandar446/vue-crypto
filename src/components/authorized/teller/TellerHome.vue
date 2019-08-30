@@ -39,8 +39,8 @@
                         active: false
                     },
                     {
-                        name: "Inactive users",
-                        href: {name: "inactiveUsers"},
+                        name: "Users",
+                        href: {name: "users"},
                         active: false
                     },
                     {
