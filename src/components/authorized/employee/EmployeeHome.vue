@@ -29,8 +29,13 @@
             return {
                 sidebarOptions: [
                     {
+                        name: "Achievements",
+                        href: {name: "achievementsList"},
+                        active: false
+                    },
+                    {
                         name: "Wallet",
-                        href: {name: "walletBalance"},
+                        href: {name: "employeeWalletBalance"},
                         active: false
                     }
                 ]

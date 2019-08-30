@@ -21,10 +21,19 @@
 
         mounted() {
 
-            if (this.data.status === 'confirm') {
-                this.$dialog.confirm(this.data);
-            } else {
-                this.$dialog.alert(this.data);
+            const type = this.data.status;
+
+            switch (type) {
+
+                case 'confirm':
+                    this.$dialog.confirm(this.data);
+                    break;
+                case 'prompt':
+                    this.$dialog.prompt(this.data);
+                    break;
+                default:
+                    this.$dialog.alert(this.data);
+                    break;
             }
             this.hideDialog();
         }

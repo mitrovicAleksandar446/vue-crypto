@@ -7,36 +7,25 @@
                     <p class="title">{{ formattedBalance }}</p>
                 </div>
             </div>
-            <div class="level-item has-text-centered">
-                <div>
-                    <p class="heading">Rewarded</p>
-                    <p class="title">{{ formattedRewarded }}</p>
-                </div>
-            </div>
-            <div class="level-item has-text-centered">
-                <div>
-                    <p class="heading">Redeemed</p>
-                    <p class="title">{{ formattedRedeemed }}</p>
-                </div>
-            </div>
         </section>
         <div class="is-divider" data-content="history"></div>
         <section>
-            <div v-if="rewardedHistory.length > 0" class="has-text-centered">
+            <div v-if="history.length > 0" class="has-text-centered">
                 <div class="timeline is-centered">
                     <header class="timeline-header">
                         <span class="tag is-medium is-primary">End</span>
                     </header>
-                    <div class="timeline-item" v-for="transaction in rewardedHistory" v-bind:key="transaction.id">
-<!--                        <header v-if="getMonth(new Date(transaction.created_at)) !== getMonth(new Date())" class="timeline-header">-->
-<!--                            <span class="tag is-primary">{{ getMonth(new Date(transaction.created_at)) }}</span>-->
-<!--                        </header>-->
-                        <div class="timeline-marker is-icon is-warning">
+                    <div class="timeline-item" v-for="transaction in history" v-bind:key="transaction.id">
+                        <div v-if="transaction.type === 'achievement'" class="timeline-marker is-icon is-warning">
                             <i class="fas fa-award"></i>
                         </div>
+                        <div v-else class="timeline-marker is-icon is-info">
+                            <i class="fas fa-money-bill-alt"></i>
+                        </div>
                         <div class="timeline-content">
-                            <p class="heading">{{ new Date(transaction.created_at).toDateString() }}</p>
-                            <p>Rewarded <b>{{ transaction.value }} QXC</b> to {{ transaction.username }} for {{ transaction.achievement.name }}</p>
+                            <p class="heading">{{ new Date(transaction.updated_at).toDateString() }}</p>
+                            <p v-if="transaction.type === 'achievement'">Rewarded <b>{{transaction.value }} QXC</b> for {{transaction.name}} </p>
+                            <p v-else>Purchased {{transaction.name}} for <b>{{transaction.value }} QXC</b> </p>
                         </div>
                     </div>
                     <div class="timeline-header">
@@ -53,6 +42,7 @@
 
 <script>
     import {mapState} from 'vuex'
+    import {mapActions} from 'vuex'
     import qxcContract from '@/services/eth/contract/'
     import historyApi from '@/services/api/history/'
 
@@ -61,14 +51,13 @@
 
         data() {
             return {
-                balance: 0,
-                redeemed: 0,
-                rewarded: 0,
-                rewardedHistory: []
+                history: [],
+                balance: 0
             }
         },
 
         computed: {
+
             ...mapState({
                 user: state => state.user.authUser
             }),
@@ -77,42 +66,29 @@
                 return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'QXC'}).format(this.balance);
             },
 
-            formattedRedeemed() {
-                return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'QXC'}).format(this.redeemed);
-            },
+        },
 
-            formattedRewarded() {
-                return new Intl.NumberFormat('de-DE', {style: 'currency', currency: 'QXC'}).format(this.rewarded);
-            }
+        actions: {
+
+            ...mapActions('toast', ['showDangerToast'])
         },
 
         async created() {
-
             try {
                 const address = this.user.address;
                 const contract = await qxcContract.getInstance(address);
 
-                contract.sendSignedTransaction("aca");
-
-                const results = await Promise.all([historyApi.getAll(), contract.balanceOf(address)]);
-
-                this.rewarded = results[0].rewarded_qxcs;
-                this.redeemed = results[0].redeemed_qxcs;
-                this.rewardedHistory = results[0].rewarded;
-                this.balance = results[1];
+                this.history = await historyApi.getMyHistory();
+                this.balance = await contract.balanceOf(address);
 
             } catch (err) {
-                this.$toast.open({
-                    message: err.response ? err.response.data.message : err.message,
-                    type: "is-danger",
-                    position: "is-top-right"
-                });
+                this.showDangerToast(err.response ? err.response.data.message : err.message);
             }
-        }
+        },
     }
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
     h3 {
         color: $buefy-purple;
     }

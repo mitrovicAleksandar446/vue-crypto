@@ -118,15 +118,7 @@
     }
 
     img {
-        display: block;
-        position: absolute;
-        left: -1000%;
-        right: -1000%;
-        top: -1000%;
-        bottom: -1000%;
-        margin: auto;
-        height: auto;
-        width: 100%;
+        object-fit: fill;
     }
 
     .no-perks {

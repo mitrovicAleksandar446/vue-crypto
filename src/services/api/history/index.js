@@ -4,10 +4,16 @@ import {
 } from './../../http'
 
 export default {
-    getAll
+    getAll,
+    getMyHistory
 }
 
 function getAll() {
     return http.get(`/history`)
+        .then(responseTransformer);
+}
+
+function getMyHistory() {
+    return http.get(`/my/history`)
         .then(responseTransformer);
 }

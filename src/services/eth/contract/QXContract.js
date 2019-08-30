@@ -1,9 +1,6 @@
+import Contract from './Contract'
 
-class QXContract {
-
-    constructor(contract) {
-        this.contract = contract;
-    }
+class QXContract extends Contract {
 
     balanceOf(address) {
         return this.contract.methods.balanceOf(address).call();

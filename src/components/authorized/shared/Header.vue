@@ -33,7 +33,7 @@
                             </span>
                             <span>Project</span>
                         </a>
-                        <router-link :to="{name: 'recoverWallet'}" class="navbar-item">
+                        <router-link :to="{name: this.recoverWalletPath}" class="navbar-item">
                             <span class="icon">
                               <i class="fas fa-wallet"></i>
                             </span>
@@ -77,6 +77,8 @@
 <script>
     import {mapState} from 'vuex';
     import {mapActions} from 'vuex';
+    import {mapGetters} from 'vuex';
+    import {TELLER_ID} from "@/utils/role-types/";
 
     export default {
         name: "Header",
@@ -91,7 +93,13 @@
             ...mapState({
                 user: state => state.user.authUser,
                 wallet: state => state.wallet.wallet
-            })
+            }),
+
+            ...mapGetters('user', ['userRoles']),
+
+            recoverWalletPath() {
+                return this.userRoles.includes(TELLER_ID) ? 'recoverWallet' : 'employeeRecoverWallet';
+            }
         },
 
         methods: {

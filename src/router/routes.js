@@ -16,6 +16,8 @@ import RewardRequests from "../components/authorized/teller/requests/RewardReque
 import RedeemRequests from "../components/authorized/teller/requests/RedeemRequests";
 import Error404 from "../components/authorized/shared/errors/Error404";
 import Error500 from "../components/authorized/shared/errors/Error500";
+import EmployeeWalletBalance from "../components/authorized/employee/wallet/WalletBalance";
+import AchievementsList from "../components/authorized/employee/achievements/AchievementsList";
 
 import {EMPLOYEE_ID, TELLER_ID} from "../utils/role-types";
 
@@ -51,16 +53,28 @@ export default [
     {
         path: '/employee',
         name: "employeeHome",
-        redirect: { name: 'walletBalance' },
+        redirect: { name: 'employeeWalletBalance' },
         component: EmployeeHome,
         meta: getMeta(true, EMPLOYEE_ID),
         children: [
             {
+                path: '/achievements',
+                name: "achievementsList",
+                component: AchievementsList,
+                meta: getMeta(true, EMPLOYEE_ID)
+            },
+            {
                 path: '/recover-wallet',
-                name: "recoverWallet",
+                name: "employeeRecoverWallet",
                 component: RecoverWallet,
                 meta: getMeta(true, EMPLOYEE_ID)
-            }
+            },
+            {
+                path: '/wallet',
+                name: "employeeWalletBalance",
+                component: EmployeeWalletBalance,
+                meta: getMeta(true, EMPLOYEE_ID)
+            },
         ]
     },
     {
