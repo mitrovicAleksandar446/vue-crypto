@@ -29,7 +29,7 @@
             </tbody>
         </table>
         <span v-else class="tag is-warning is-large">
-            No inactive users ...
+            There are no users ...
         </span>
     </div>
 </template>

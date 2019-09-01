@@ -58,19 +58,19 @@ export default [
         meta: getMeta(true, EMPLOYEE_ID),
         children: [
             {
-                path: '/achievements',
+                path: '/employee/achievements',
                 name: "achievementsList",
                 component: AchievementsList,
                 meta: getMeta(true, EMPLOYEE_ID)
             },
             {
-                path: '/recover-wallet',
+                path: '/employee/recover-wallet',
                 name: "employeeRecoverWallet",
                 component: RecoverWallet,
                 meta: getMeta(true, EMPLOYEE_ID)
             },
             {
-                path: '/wallet',
+                path: '/employee/wallet',
                 name: "employeeWalletBalance",
                 component: EmployeeWalletBalance,
                 meta: getMeta(true, EMPLOYEE_ID)
