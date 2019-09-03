@@ -3,11 +3,11 @@ import Contract from './Contract'
 class QXContract extends Contract {
 
     balanceOf(address) {
-        return this.contract.methods.balanceOf(address).call();
+        return this.sendSignedTransaction(this.contract.methods.balanceOf(address));
     }
 
     transfer(to, tokens) {
-        return this.contract.methods.transfer(to, tokens).send();
+        return this.sendSignedTransaction(this.contract.methods.transfer(to, tokens));
     }
 }
 

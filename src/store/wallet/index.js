@@ -11,9 +11,11 @@ const state = {
 };
 
 const mutations = {
+
     setMnemonic(state, mnemonic) {
         state.mnemonic = mnemonic;
     },
+
     setWallet(state, wallet) {
         state.wallet = wallet;
     }

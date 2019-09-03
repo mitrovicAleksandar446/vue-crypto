@@ -92,8 +92,6 @@
                 const address = this.user.address;
                 const contract = await qxcContract.getInstance(address);
 
-                contract.sendSignedTransaction("aca");
-
                 const results = await Promise.all([historyApi.getAll(), contract.balanceOf(address)]);
 
                 this.rewarded = results[0].rewarded_qxcs;
