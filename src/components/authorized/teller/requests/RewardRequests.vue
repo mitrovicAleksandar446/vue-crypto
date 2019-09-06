@@ -85,7 +85,7 @@
             async approveRequest(request) {
 
                 this.activateLoader(true);
-                const contract = await qxcContract.getInstance(this.user.address);
+                const contract = await qxcContract.getInstance();
 
                 contract.transfer(request.address, request.value)
                     .on("error", err => {

@@ -52,7 +52,7 @@
 </template>
 
 <script>
-    import {mapState} from 'vuex'
+    import {mapState, mapActions} from 'vuex'
     import qxcContract from '@/services/eth/contract/'
     import historyApi from '@/services/api/history/'
 
@@ -66,6 +66,10 @@
                 rewarded: 0,
                 rewardedHistory: []
             }
+        },
+
+        methods: {
+            ...mapActions("toast", ["showDangerToast"])
         },
 
         computed: {
@@ -89,10 +93,8 @@
         async created() {
 
             try {
-                const address = this.user.address;
-                const contract = await qxcContract.getInstance(address);
-
-                const results = await Promise.all([historyApi.getAll(), contract.balanceOf(address)]);
+                const contract = await qxcContract.getInstance();
+                const results  = await Promise.all([historyApi.getAll(), contract.balanceOf(address)]);
 
                 this.rewarded = results[0].rewarded_qxcs;
                 this.redeemed = results[0].redeemed_qxcs;
@@ -100,11 +102,7 @@
                 this.balance = results[1];
 
             } catch (err) {
-                this.$toast.open({
-                    message: err.response ? err.response.data.message : err.message,
-                    type: "is-danger",
-                    position: "is-top-right"
-                });
+                this.showDangerToast(err.response ? err.response.data.message : err.message);
             }
         }
     }

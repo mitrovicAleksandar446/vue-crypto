@@ -5,27 +5,20 @@ import store from '@/store/';
 
 let qxcContract = null;
 
-async function create(address) {
+async function create() {
 
-    if (!store.state.contract.contractAddress)  {
+    if (!store.state.contract.contractAddress) {
         await store.dispatch("contract/getContract");
     }
     const contract = store.state.contract;
-    const options = {
-        from: address,
-        gasPrice: CONTRACT_GAS_PRICE
-    };
 
-    const qxcRawContract = new ethClient.eth.Contract(contract.contractAbi, contract.contractAddress, options);
+    const qxcRawContract = new ethClient.eth.Contract(contract.contractAbi, contract.contractAddress, {gasPrice: CONTRACT_GAS_PRICE});
     return new QXContract(qxcRawContract);
 }
 
-async function getInstance(address) {
-    if (qxcContract) {
-        qxcContract.contract.options.from = address;
-        return qxcContract;
-    }
-    else return qxcContract = await create(address);
+async function getInstance() {
+    if (!store.state.wallet.wallet) throw new Error("Wallet is not loaded");
+    return qxcContract ? qxcContract : await create();
 }
 
 export default {

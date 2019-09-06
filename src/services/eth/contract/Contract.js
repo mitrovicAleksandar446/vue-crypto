@@ -4,7 +4,7 @@ import {ethClient} from '../../ethClient';
 
 class Contract {
 
-    contract;
+    contract = null;
 
     constructor(contract) {
         this.contract = contract;
@@ -13,8 +13,9 @@ class Contract {
     sendSignedTransaction(query) {
 
         const privateKey = store.state.wallet.wallet.privateKey;
+        const from = store.state.wallet.wallet.address;
         const tx = {
-            from: this.contract.options.from,
+            from,
             to: this.contract.options.address,
             gas: CONTRACT_GAS,
             data: query.encodeABI(),
