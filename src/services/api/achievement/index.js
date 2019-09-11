@@ -10,7 +10,9 @@ export default {
     get,
     update,
     getRequests,
-    updateRequest
+    updateRequest,
+    createRequest,
+    getMyAchievements,
 }
 
 function create(perk) {
@@ -42,4 +44,13 @@ function getRequests(status) {
 
 function updateRequest(request, id) {
     return http.patch(`/user-achievements/${id}`, request);
+}
+
+function createRequest(request, id) {
+    return http.post(`/my/achievements/${id}`, request);
+}
+
+function getMyAchievements(status) {
+    return http.get(`/my/achievements`, {params: {status}})
+        .then(responseTransformer);
 }

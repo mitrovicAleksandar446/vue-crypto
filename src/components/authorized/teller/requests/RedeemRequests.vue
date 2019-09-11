@@ -84,19 +84,19 @@
             async approveRequest(request) {
 
                 this.activateLoader(true);
-                const contract = await qxcContract.getInstance(request.address);
+                const contract = await qxcContract.getInstance();
 
                 contract.transfer(this.tellerAddress, request.value)
-                    .on("error", err => {
-                        this.activateLoader(false);
-                        this.showDangerToast(err.message);
-                    })
                     .then(async () => {
                         await perkApi.updateRequest({status: 'approved'}, request.id);
                         this.requests = this.requests.filter(req => req.id !== request.id);
                         this.activateLoader(false);
                         this.showSuccessToast("Request approved");
                     })
+                    .catch(err => {
+                        this.activateLoader(false);
+                        this.showDangerToast(err.message);
+                    });
             },
 
             async rejectRequest(request) {

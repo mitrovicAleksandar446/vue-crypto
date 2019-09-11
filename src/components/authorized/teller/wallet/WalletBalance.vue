@@ -94,7 +94,7 @@
 
             try {
                 const contract = await qxcContract.getInstance();
-                const results  = await Promise.all([historyApi.getAll(), contract.balanceOf(address)]);
+                const results  = await Promise.all([historyApi.getAll(), contract.balanceOf(this.user.address)]);
 
                 this.rewarded = results[0].rewarded_qxcs;
                 this.redeemed = results[0].redeemed_qxcs;

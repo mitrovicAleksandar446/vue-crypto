@@ -27,7 +27,7 @@
 
                 <div id="navbarBasicExample" :class="{'navbar-menu': true, 'is-active': burgerActive}">
                     <div class="navbar-start">
-                        <a href="http://git.quantox.tech/aleksa446/quantox-vue" class="navbar-item">
+                        <a href="http://git.quantox.tech/aleksa446/quantox-vue" class="navbar-item" target="_blank">
                             <span class="icon">
                               <i class="fab fa-github"></i>
                             </span>

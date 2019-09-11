@@ -68,18 +68,17 @@
 
         },
 
-        actions: {
+        methods: {
 
             ...mapActions('toast', ['showDangerToast'])
         },
 
         async created() {
             try {
-                const address = this.user.address;
-                const contract = await qxcContract.getInstance(address);
+                const contract = await qxcContract.getInstance();
 
                 this.history = await historyApi.getMyHistory();
-                this.balance = await contract.balanceOf(address);
+                this.balance = await contract.balanceOf(this.user.address);
 
             } catch (err) {
                 this.showDangerToast(err.response ? err.response.data.message : err.message);
