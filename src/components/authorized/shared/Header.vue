@@ -120,6 +120,7 @@
 
 <style scoped>
     .hero.is-primary {
+        text-align: center;
         background: linear-gradient(to top right, #524ad0 10%, #D099FA);
     }
 

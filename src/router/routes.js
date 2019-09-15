@@ -18,6 +18,7 @@ import Error404 from "../components/authorized/shared/errors/Error404";
 import Error500 from "../components/authorized/shared/errors/Error500";
 import EmployeeWalletBalance from "../components/authorized/employee/wallet/WalletBalance";
 import AchievementsList from "../components/authorized/employee/achievements/AchievementsList";
+import PerksList from "../components/authorized/employee/perks/PerksList";
 
 import {EMPLOYEE_ID, TELLER_ID} from "../utils/role-types";
 
@@ -61,6 +62,12 @@ export default [
                 path: '/request/achievements',
                 name: "achievementsList",
                 component: AchievementsList,
+                meta: getMeta(true, EMPLOYEE_ID)
+            },
+            {
+                path: '/request/perks',
+                name: "perksList",
+                component: PerksList,
                 meta: getMeta(true, EMPLOYEE_ID)
             },
             {

@@ -34,6 +34,11 @@
                         active: false
                     },
                     {
+                        name: "Perks",
+                        href: {name: "perksList"},
+                        active: false
+                    },
+                    {
                         name: "Wallet",
                         href: {name: "employeeWalletBalance"},
                         active: false

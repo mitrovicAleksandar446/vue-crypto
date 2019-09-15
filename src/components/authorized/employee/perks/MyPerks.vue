@@ -1,43 +1,45 @@
 <template>
     <section>
         <section>
-            <table v-if="achievements.length > 0" class="table is-striped is-hoverable is-fullwidth">
+            <table v-if="perks.length > 0" class="table is-striped is-hoverable is-fullwidth">
                 <thead>
                 <tr>
                     <th>Date</th>
-                    <th>Achievement</th>
+                    <th>Perk</th>
+                    <th>Value (QXC)</th>
                     <th>Note</th>
                     <th>Teller Note</th>
                     <th>Status</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="achievement in achievements" :key="achievement.id">
-                    <td>{{ achievement.created_at }}</td>
-                    <td>{{ achievement.achievement.name }}</td>
-                    <td>{{ achievement.employee_note }}</td>
-                    <td>{{ achievement.teller_note }}</td>
-                    <td>{{ achievement.status }}</td>
+                <tr v-for="perk in perks" :key="perk.id">
+                    <td>{{ perk.created_at }}</td>
+                    <td>{{ perk.perk.name }}</td>
+                    <td>{{ perk.value }}</td>
+                    <td>{{ perk.employee_note }}</td>
+                    <td>{{ perk.teller_note }}</td>
+                    <td>{{ perk.status }}</td>
                 </tr>
                 </tbody>
             </table>
             <span v-else class="tag is-warning is-large">
-                There are no requested achievements ...
+                There are no requested perks ...
             </span>
         </section>
     </section>
 </template>
 
 <script>
-    import achievementApi from '@/services/api/achievement/'
+    import perkApi from '@/services/api/perk/'
     import {mapActions} from 'vuex'
 
     export default {
-        name: "MyAchievements",
+        name: "MyPerks",
 
         data() {
             return {
-                achievements: []
+                perks: []
             }
         },
 
@@ -47,7 +49,7 @@
 
         async created() {
             this.activateLoader(true);
-            this.achievements = await achievementApi.getMyAchievements('pending');
+            this.perks = await perkApi.getMyPerks('pending');
             this.activateLoader(false);
         }
     }

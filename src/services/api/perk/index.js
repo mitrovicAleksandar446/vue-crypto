@@ -10,7 +10,9 @@ export default {
     get,
     update,
     getRequests,
-    updateRequest
+    updateRequest,
+    createRequest,
+    getMyPerks,
 }
 
 function create(perk) {
@@ -42,4 +44,12 @@ function getRequests(status) {
 
 function updateRequest(request, id) {
     return http.patch(`/user-perks/${id}`, request);
+}
+function createRequest(request, id) {
+    return http.post(`/my/perks/${id}`, request);
+}
+
+function getMyPerks(status) {
+    return http.get(`/my/perks`, {params: {status}})
+        .then(responseTransformer);
 }

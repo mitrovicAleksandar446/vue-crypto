@@ -77,14 +77,14 @@
         computed: {
             ...mapState({
                 user: state => state.user.authUser,
-                wallet: state => state.wallet.wallet,
-                walletStored: state => state.wallet.walletStored
+                wallet: state => state.wallet.wallet
             })
         },
 
         methods: {
             ...mapActions('wallet', ['recoverWallet']),
             ...mapActions('loader', ['activateLoader']),
+            ...mapActions('toast', ['showSuccessToast', 'showDangerToast']),
 
             validateBeforeRecovering() {
                 this.$validator.validateAll().then(this.recover);
@@ -103,17 +103,9 @@
                         });
                         this.clearForm();
                         this.activateLoader(false);
-                        this.$toast.open({
-                            message: 'Wallet successfully recovered',
-                            type: 'is-success',
-                            position: 'is-top-right'
-                        });
+                        this.showSuccessToast('Wallet successfully recovered');
                     } catch (err) {
-                        this.$toast.open({
-                            message: err.message,
-                            type: 'is-danger',
-                            position: 'is-top-right'
-                        });
+                        this.showSuccessToast(err.message);
                         this.clearForm();
                         this.activateLoader(false);
                     }
