@@ -35,58 +35,70 @@
 </template>
 
 <script>
-    import perkApi from '@/services/api/perk/'
-    import {mapActions} from 'vuex'
+	import perkApi from '@/services/api/perk/'
+	import {mapActions, mapState} from 'vuex'
+	import qxcContract from '@/services/eth/contract/'
 
-    export default {
-        name: "RequestPerks",
+	export default {
+		name: "RequestPerks",
 
-        data() {
-            return {
-                perks: []
-            }
-        },
+		data() {
+			return {
+				perks: []
+			}
+		},
 
-        async created() {
-            this.perks = await perkApi.getAll();
-        },
+		computed: {
+			...mapState({
+				tellerAddress: state => state.contract.tellerAddress
+			})
+		},
 
-        methods: {
-            ...mapActions('dialog', ['showDialog']),
-            ...mapActions('loader', ['activateLoader']),
-            ...mapActions('toast', ['showSuccessToast', 'showDangerToast']),
+		async created() {
+			this.perks = await perkApi.getAll();
+		},
 
-            promptRequest(id) {
+		methods: {
+			...mapActions('dialog', ['showDialog']),
+			...mapActions('loader', ['activateLoader']),
+			...mapActions('toast', ['showSuccessToast', 'showDangerToast']),
 
-                this.showDialog({
-                    status: 'prompt',
-                    message: `Enter note for admin?`,
-                    inputAttrs: {
-                        required: false,
-                        size: 1000,
-                        placeholder: 'Note here...'
-                    },
-                    onConfirm: (value) => this.createRequest(value, id)
-                })
-            },
+			promptRequest(id) {
 
-            createRequest(note, id) {
+				this.showDialog({
+					status: 'prompt',
+					message: `Enter note for admin?`,
+					inputAttrs: {
+						required: false,
+						size: 1000,
+						placeholder: 'Note here...'
+					},
+					onConfirm: (value) => this.createRequest(value, id)
+				})
+			},
 
-                this.activateLoader(true);
-                const request = note ? {"employee_note": note} : {};
-                perkApi.createRequest(request, id)
-                    .then(() => {
-                        this.activateLoader(false);
-                        this.showSuccessToast("Perk requested");
-                    })
-                    .catch(err => {
-                        this.activateLoader(false);
-                        this.showDangerToast(err.response ? err.response.data.message : err.message);
-                    });
+			async createRequest(note, id) {
 
-            }
-        }
-    }
+				this.activateLoader(true);
+				const requestedPerk = this.perks.find(perk => perk.id === id);
+				const contract = await qxcContract.getInstance();
+
+				contract.transfer(this.tellerAddress, requestedPerk.value)
+					.then(async () => {
+						const request = note ? {"employee_note": note} : {};
+						await perkApi.createRequest(request, id);
+						this.activateLoader(false);
+						this.showSuccessToast("Perk requested");
+					})
+					.catch(err => {
+						this.activateLoader(false);
+						this.showDangerToast(err.message);
+					});
+
+
+			}
+		}
+	}
 </script>
 
 <style scoped>

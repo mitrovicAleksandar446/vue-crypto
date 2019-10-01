@@ -16,6 +16,9 @@ export const CONTRACT_GAS_PRICE = process.env.VUE_APP_CONTRACT_GAS_PRICE || '200
 /** @namespace process.env.VUE_APP_CONTRACT_GAS */
 export const CONTRACT_GAS = process.env.VUE_APP_CONTRACT_GAS || '2000000';
 
+/** @namespace process.env.CONTRACT_DECIMALS */
+export const CONTRACT_DECIMALS = process.env.VUE_APP_CONTRACT_DECIMALS || 6;
+
 /** @namespace process.env.VUE_APP_QXC_WALLET */
 export const QXC_WALLET = process.env.VUE_APP_QXC_WALLET || 'qxc-wallet';
 

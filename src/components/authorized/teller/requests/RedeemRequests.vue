@@ -20,7 +20,8 @@
                             </p>
                         </div>
                         <nav class="level is-mobile teller-note">
-                            <teller-note v-bind:note.sync="request.teller_note" v-on:save:note="updateTellerNote(request)"></teller-note>
+                            <teller-note v-bind:note.sync="request.teller_note"
+                                         v-on:save:note="updateTellerNote(request)"></teller-note>
                         </nav>
                         <nav class="level is-mobile">
                             <div class="level-right">
@@ -43,77 +44,78 @@
 </template>
 
 <script>
-    import TellerNote from './TellerNote'
-    import {mapState} from 'vuex'
-    import {mapActions} from 'vuex'
-    import perkApi from '@/services/api/perk/'
-    import qxcContract from '@/services/eth/contract/'
+	import TellerNote from './TellerNote'
+	import {mapState} from 'vuex'
+	import {mapActions} from 'vuex'
+	import perkApi from '@/services/api/perk/'
+	import qxcContract from '@/services/eth/contract/'
 
-    export default {
-        name: "RedeemRequests",
+	export default {
+		name: "RedeemRequests",
 
-        components: {
-            TellerNote
-        },
+		components: {
+			TellerNote
+		},
 
-        data() {
-            return {
-                requests: []
-            }
-        },
+		data() {
+			return {
+				requests: []
+			}
+		},
 
-        computed: {
-            ...mapState({
-                tellerAddress: state => state.contract.tellerAddress
-            })
-        },
+		computed: {
+			...mapState({
+				tellerAddress: state => state.contract.tellerAddress
+			})
+		},
 
-        async created() {
-            this.requests = await perkApi.getRequests('pending');
-        },
+		async created() {
+			this.requests = await perkApi.getRequests('pending');
+		},
 
-        methods: {
-            ...mapActions("loader", ["activateLoader"]),
-            ...mapActions("toast", ["showSuccessToast", "showDangerToast"]),
+		methods: {
+			...mapActions("loader", ["activateLoader"]),
+			...mapActions("toast", ["showSuccessToast", "showDangerToast"]),
 
-            updateTellerNote(request) {
-                if (!request.teller_note) return;
-                perkApi.updateRequest({teller_note: request.teller_note}, request.id);
-            },
+			updateTellerNote(request) {
+				if (!request.teller_note) return;
+				perkApi.updateRequest({teller_note: request.teller_note}, request.id);
+			},
 
-            async approveRequest(request) {
+			async approveRequest(request) {
 
-                this.activateLoader(true);
-                const contract = await qxcContract.getInstance();
+				this.activateLoader(true);
+				try {
+					await perkApi.updateRequest({status: 'approved'}, request.id);
+					this.requests = this.requests.filter(req => req.id !== request.id);
+					this.activateLoader(false);
+					this.showSuccessToast("Request approved");
+				} catch (err) {
+					this.activateLoader(false);
+					this.showDangerToast(err.response.data.message);
+				}
 
-                contract.transfer(this.tellerAddress, request.value)
-                    .then(async () => {
-                        await perkApi.updateRequest({status: 'approved'}, request.id);
-                        this.requests = this.requests.filter(req => req.id !== request.id);
-                        this.activateLoader(false);
-                        this.showSuccessToast("Request approved");
-                    })
-                    .catch(err => {
-                        this.activateLoader(false);
-                        this.showDangerToast(err.message);
-                    });
-            },
+			},
 
-            async rejectRequest(request) {
+			async rejectRequest(request) {
 
-                this.activateLoader(true);
-                try {
-                    await perkApi.updateRequest({status: 'rejected'}, request.id);
-                    this.requests = this.requests.filter(req => req.id !== request.id);
-                    this.activateLoader(false);
-                    this.showSuccessToast("Request rejected");
-                } catch (err) {
-                    this.activateLoader(false);
-                    this.showDangerToast(err.response.data.message);
-                }
-            }
-        }
-    }
+				this.activateLoader(true);
+				const contract = await qxcContract.getInstance();
+
+				contract.transfer(request.address, request.value)
+					.then(async () => {
+						await perkApi.updateRequest({status: 'rejected'}, request.id);
+						this.requests = this.requests.filter(req => req.id !== request.id);
+						this.activateLoader(false);
+						this.showSuccessToast("Request rejected");
+					})
+					.catch(err => {
+						this.activateLoader(false);
+						this.showDangerToast(err.message);
+					});
+			}
+		}
+	}
 </script>
 
 <style scoped>
